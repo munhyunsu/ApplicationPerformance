@@ -3,6 +3,12 @@
 import sys
 import json
 
+
+class APPHAR(object):
+    def __init__(self):
+        pass
+
+
 def main(argv):
     pass
 
