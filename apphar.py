@@ -5,7 +5,7 @@ import json
 
 
 class APPHAR(object):
-    data = dict()
+    data = list()
 
     def __init__(self):
         pass
