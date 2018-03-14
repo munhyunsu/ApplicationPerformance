@@ -108,7 +108,8 @@ def run_ffmpeg(video_name):
         raise e
 
     # ffmpeg 실행
-    command = 'ffmpeg -i ' + str(video_name) + '.mp4 -vf fps=1 ' + str(video_name) + '/out%03d.jpg' 
+    # LuHa: fps=2 로 변경
+    command = 'ffmpeg -i ' + str(video_name) + '.mp4 -vf fps=2 ' + str(video_name) + '/out%03d.jpg' 
     try:
         ffmpeg = subprocess.check_call(command, stdout=subprocess.PIPE, shell=True)
     except Exception as e:
@@ -148,6 +149,26 @@ def get_similarity_list(files_list):
         list_similarity.append([files_list[index], files_list[index+1], similarity])
 
     return list_similarity
+
+def get_similarity_list_last(files_list):
+    files_list = files_list[:5]
+    list_similarity = []
+    
+    for index in range(len(files_list)):
+        try:
+            image1 = Image.open(files_list[index])
+            image2 = Image.open(files_list[-1])
+        except OSError as e:
+            continue
+        except IndexError as e:
+            continue
+        similarity = get_similarity(image1.getdata(), image2.getdata())
+        list_similarity.append([files_list[index], files_list[-1], similarity])
+
+    return list_similarity
+
+
+
 
 def write2csv(app_name, speed_list):
     if len(speed_list) == 0:
@@ -193,6 +214,9 @@ def main():
         """
 
         list_similarity = get_similarity_list(files_list)
+        list_similarity_last = get_similarity_list_last(files_list)
+        print(list_similarity_last)
+
         logging.info(video_name + ' list_similarity : ' + str(list_similarity))
         speed_list = get_speed_index_of_first_activity(list_similarity)
         logging.info(video_name + ' speed_list : ' + str(speed_list))
