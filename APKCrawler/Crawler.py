@@ -74,7 +74,7 @@ class Crawler:
             package_name = url.split('id=')[1]
             package_list.append(package_name)
 
-        return package_list
+        return package_list[:2]
 
     def __get_app_detail(self, package_list):
         """
@@ -117,10 +117,13 @@ class Crawler:
             except:
                 print(package + " 오류 발생")
                 print(package + " name, img_src, update_date 가져오기 실패")
-                continue
+                name = package
+                img_src = ''
+                updated_date = ''
+                ratings = ''
 
             # [앱 이름, 패키지 이름, 이미지 소스, 최신업데이트 날짜, APK다운 여부]
-            detail_list.append([name, package, img_src, updated_date, False])
+            detail_list.append([name, package, img_src, updated_date, ratings, False])
 
         return detail_list
 
@@ -260,14 +263,15 @@ class Crawler:
 
 
             # apk 파일 다운로드가 성공하면 db에 True로 저장, 실패시 False로 저장
-            if(self.__download_apk(package_name, src)):
-                self.db_connector.update_isdownload(package_name, True)
-            else:
-                self.db_connector.update_isdownload(package_name, False)
+            self.__download_apk(package_name, src)
+            #if(self.__download_apk(package_name, src)):
+            #    self.db_connector.update_isdownload(package_name, True)
+            #else:
+            #    self.db_connector.update_isdownload(package_name, False)
 
         self.db_connector.commit_n_close()
 
     def close(self):
-        self.chrome.stop()
+        self.chrome.close()
         if(not self.is_desktop):
             self.display.stop()
