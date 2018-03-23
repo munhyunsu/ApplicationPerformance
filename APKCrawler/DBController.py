@@ -136,8 +136,9 @@ class DBController:
                 (new_app_name,))
 
             # 기존 DB에 없던 앱이라면 새로 DB에 추가시힘
-            app_details = self.cursor.fetchone()[0]
-            if data == 0:
+            #app_details = self.cursor.fetchone()[0]
+            data = self.cursor.fetchone()
+            if data == None:
                 self.insert_app(new_app_name,package,img_src,update_date,ratings,is_downloaded,category)
                 logging.info(new_app_name + ' is inserted')
                 continue
