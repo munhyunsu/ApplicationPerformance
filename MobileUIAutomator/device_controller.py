@@ -26,10 +26,10 @@ class DeviceController:
                 "pcap_save_directory")
             self.save_directory = config.get("device_controller",\
                 "save_directory")
-            self.save_directory = save_directory + \
+            self.save_directory = self.save_directory + \
                 datetime.datetime.now().strftime('%y%m%d') + '/'
 
-            os.makedirs(save_directory)
+            os.makedirs(self.save_directory)
         except FileExistsError as e: # 파일이 이미 존재한다면 넘어간다.
             pass
         except Exception as e:
@@ -90,15 +90,15 @@ class DeviceController:
         # 데이터를 수집할 디렉토리가 없다면 미리 생성
         # 이미 디렉토리가 존재한다면 pass
         try:
-            os.makedirs(save_directory + 'pcap')
-            os.makedirs(save_directory + 'record')
+            os.makedirs(self.save_directory + 'pcap')
+            os.makedirs(self.save_directory + 'record')
         except FileExistsError as e:
             print(e)
             pass
         except Exception as e:
             raise e
         try:
-            os.makedirs(save_directory + 'xml/' + pkg_name)
+            os.makedirs(self.save_directory + 'xml/' + pkg_name)
         except Exception as e:
             return
         try:
@@ -106,17 +106,24 @@ class DeviceController:
             apk_name = pkg_name + '.apk'
             mp4_name = pkg_name + '.mp4'
 
+            print('target', pkg_name)
             # apk파일 설치
-            command = adb_location + "adb install " + apk_directory + apk_name
+            command = self.adb_location + "adb uninstall " + pkg_name
+            try:
+                subprocess.check_call(command, shell=True)
+            except:
+                pass
+            time.sleep(2)
+            command = self.adb_location + "adb install " + self.apk_directory + apk_name
             subprocess.check_call(command, shell=True)
 
             # tcpdump 실행(Popen으로 Background로 실행)
-            command = adb_location + "adb shell su -c " + tcpdump_directory + "tcpdump -i wlan0 -w " +\
-                pcap_save_directory + pcap_name + " -s 0"
+            command = self.adb_location + "adb shell su -c " + self.tcpdump_directory + "tcpdump -i wlan0 -w " +\
+                self.pcap_save_directory + pcap_name + " -s 0"
             proc_tcpdump = subprocess.Popen(command, shell=True)
 
             # 화면 녹화(Popen으로 Background로 실행) 
-            command = adb_location + "adb shell screenrecord " + pcap_save_directory + mp4_name
+            command = self.adb_location + "adb shell screenrecord " + self.pcap_save_directory + mp4_name
             proc_record = subprocess.Popen(command, shell=True)
 
             # 화면 녹화 시작시간 파악
@@ -128,12 +135,13 @@ class DeviceController:
             session = []
 
             # 첫 이벤트는 앱실행도 같이 시켜야 하기 때문에 monkey로 이벤트 발생
-            command = adb_location + "adb shell monkey -p " + pkg_name + " --pct-touch 100 3"
+            #command = self.adb_location + "adb shell monkey -p " + pkg_name + " --pct-touch 100 3"
+            command = self.adb_location + "adb shell monkey -p " + pkg_name + " -c android.intent.category.LAUNCHER 1"
             subprocess.check_call(command, shell=True)
             time.sleep(5)
 
             # 총 5개의 이벤트 발생
-            num_of_event = 5
+            num_of_event = 1
 
             while(event_index < num_of_event):
                 prev_count = -1
@@ -141,7 +149,7 @@ class DeviceController:
                 while(True):
                     # uiautomator를 batch job으로 무한반복시키면서 node 개수 파악 
                     snap_time = datetime.datetime.now() - initial_time
-                    command = adb_location + "adb shell su -c uiautomator dump /sdcard/xml/" +\
+                    command = self.adb_location + "adb shell su -c uiautomator dump /sdcard/xml/" +\
                         str(int(snap_time.total_seconds())) + ".xml"
                     uiautomator_output = subprocess.check_output(command, shell=True)
                     uiautomator_output = uiautomator_output.decode('utf-8')
@@ -151,14 +159,14 @@ class DeviceController:
 
                     # 서버에서 앱 실행전에 uiautomator가 동작하면 파일이 생성되지 않는 문제가 존재
                     try:
-                        command = adb_location + "adb pull /sdcard/xml/" + str(int(snap_time.total_seconds())) + ".xml " +\
-                            save_directory + 'xml/' + pkg_name + '/'
+                        command = self.adb_location + "adb pull /sdcard/xml/" + str(int(snap_time.total_seconds())) + ".xml " +\
+                            self.save_directory + 'xml/' + pkg_name + '/'
                         subprocess.check_call(command, shell=True, stdout=None)
                     except Exception as e:
                         continue
 
                     # xml파일 파싱하여 node 개수 파악
-                    tree = parse(save_directory + 'xml/' + pkg_name + '/' + str(int(snap_time.total_seconds())) + ".xml")
+                    tree = parse(self.save_directory + 'xml/' + pkg_name + '/' + str(int(snap_time.total_seconds())) + ".xml")
                     root = tree.getroot()
                     iterator =  root.iter()
 
@@ -181,42 +189,43 @@ class DeviceController:
 
                     # 노드개수가 5개의 xml파일동안 동일하면 렌더링 완료
                     if((count == 3) | (total_count >= 20)):
-                        print('event detected')
-                        snap_time = datetime.datetime.now() - initial_time
-                        print('snap time : ' + str(int(snap_time.total_seconds())) + '\n\n')
-                        session.append(str(int(snap_time.total_seconds())))
-
-                        # 터치할 수 있는 객체중 하나 랜덤으로 선택하여 해당 좌표로 입력이벤트 발생시킴
-                        # 터치할 수 있는 객체중에 레이아웃도 있는데 그때는 0,0이 나옴. 그것은 자동필터링
-                        # TODO: 화면 안에 터치할 수 잇는 버튼이 없을 가능성이 있나 ?
-                        if(len(clickable_list) !=0):
-                            while(True):
-                                bounds = random.choice(clickable_list).get('bounds')
-                                bounds = re.split('\[|\]|,',bounds)
-                                bounds = list(filter(None, bounds))
-                                x = int((int(bounds[0]) + int(bounds[2]))/2)
-                                y = int((int(bounds[1]) + int(bounds[3]))/2)
-
-                                if(x!=0 and y!=0):
-                                    break
-                            if (event_index  != num_of_event):
-                                print('x : ' + str(x) + " y : " + str(y))
-                                command = adb_location + "adb shell input tap " + str(x) + " " + str(y)
-                                subprocess.check_call(command, shell=True, stdout=None)
-                        # 현재 화면에서 터치할 수 있는 개체가 없는경우에는 monkey로 랜덤 좌표 이벤트 발생
-                        else:
-                            command = adb_location + "adb shell monkey -p " + pkg_name + " --pct-touch 100 3"
-                            subprocess.check_call(command, shell=True, stdout=None)
-                        total_count = 0
                         break
-                    total_count += 1
+#                        print('event detected')
+#                        snap_time = datetime.datetime.now() - initial_time
+#                        print('snap time : ' + str(int(snap_time.total_seconds())) + '\n\n')
+#                        session.append(str(int(snap_time.total_seconds())))
+#
+#                        # 터치할 수 있는 객체중 하나 랜덤으로 선택하여 해당 좌표로 입력이벤트 발생시킴
+#                        # 터치할 수 있는 객체중에 레이아웃도 있는데 그때는 0,0이 나옴. 그것은 자동필터링
+#                        # TODO: 화면 안에 터치할 수 잇는 버튼이 없을 가능성이 있나 ?
+#                        if(len(clickable_list) !=0):
+#                            while(True):
+#                                bounds = random.choice(clickable_list).get('bounds')
+#                                bounds = re.split('\[|\]|,',bounds)
+#                                bounds = list(filter(None, bounds))
+#                                x = int((int(bounds[0]) + int(bounds[2]))/2)
+#                                y = int((int(bounds[1]) + int(bounds[3]))/2)
+#
+#                                if(x!=0 and y!=0):
+#                                    break
+#                            if (event_index  != num_of_event):
+#                                print('x : ' + str(x) + " y : " + str(y))
+#                                command = adb_location + "adb shell input tap " + str(x) + " " + str(y)
+#                                subprocess.check_call(command, shell=True, stdout=None)
+#                        # 현재 화면에서 터치할 수 있는 개체가 없는경우에는 monkey로 랜덤 좌표 이벤트 발생
+#                        else:
+#                            command = adb_location + "adb shell monkey -p " + pkg_name + " --pct-touch 100 3"
+#                            subprocess.check_call(command, shell=True, stdout=None)
+#                        total_count = 0
+#                        break
+#                    total_count += 1
 
 
                 event_index = event_index + 1
 
 
             # test를 마치고 csv로 저장
-            file_session = open(save_directory + "/speed.csv", "a")
+            file_session = open(self.save_directory + "/speed.csv", "a")
             file_session.write(pkg_name + "," + ','.join(str(a) for a in session) + "\n")
             file_session.close()
 
@@ -224,55 +233,56 @@ class DeviceController:
             # python subprocess kill로 죽지 않음
             # adb 를 통해 프로세스번호 확인 후 kill시키기
             if(proc_record.poll() is None):
-                command = adb_location + "adb shell ps |grep screenrecord"
+                command = self.adb_location + "adb shell ps |grep screenrecord"
                 proc_kill = subprocess.check_output(command, shell=True)
                 proc_kill = proc_kill.decode('utf-8')
                 proc_kill = list(filter(None, proc_kill.split(' ')))
                 record_id = proc_kill[1]
-                command = adb_location + "adb shell kill -2 " + record_id
+                #command = self.adb_location + "adb shell kill -9 " + record_id
+                command = self.adb_location + "adb shell kill -2 " + record_id
                 subprocess.check_call(command, shell=True)
 
             # 단말기 안에 xml 파일 전부 제거
-            command = adb_location + "adb shell rm /sdcard/xml/*"
+            command = self.adb_location + "adb shell rm /sdcard/xml/*"
             subprocess.check_call(command, shell=True)
 
             # tcpdump 프로세스 kill (관리자 권한으로 실행시켜서 subprocess로 안죽음)
             # 즉, 단말기 내부에서 kill명령어로 죽여야함
-            command = adb_location + "adb shell ps |grep tcpdump"
+            command = self.adb_location + "adb shell ps |grep tcpdump"
             proc_kill = subprocess.check_output(command, shell=True)
             proc_kill = proc_kill.decode('utf-8')  # str형태로 캐스팅
             proc_kill = list(filter(None, proc_kill.split(' '))) # 공백문자 제거하여 리스트형태로 생성
             tcpdump_id = proc_kill[1]
-            command = adb_location + "adb shell su -c kill -2 " +  tcpdump_id
+            command = self.adb_location + "adb shell su -c kill -2 " +  tcpdump_id
             subprocess.check_call(command, shell=True)
 
             # 실행되어있는 앱 종료
-            command = adb_location + "adb shell am force-stop " + pkg_name
+            command = self.adb_location + "adb shell am force-stop " + pkg_name
             subprocess.check_call(command, shell=True)
 
             # pcap파일 pull
-            if(proc_record.poll() is not None):
-                command = adb_location + "adb pull " + pcap_save_directory + pcap_name + ' ' +\
-                save_directory + 'pcap/'
-                subprocess.check_call(command, shell=True)
+            #if(proc_tcpdump.poll() is not None):
+            command = self.adb_location + "adb pull " + self.pcap_save_directory + pcap_name + ' ' +\
+            self.save_directory + 'pcap/'
+            subprocess.check_call(command, shell=True)
 
             # mp4파일 pull
-            if(proc_tcpdump.poll() is not None):
-                command = adb_location + "adb pull " + pcap_save_directory + mp4_name + ' ' +\
-                    save_directory + 'record/'
-                subprocess.check_call(command, shell=True)
+            #if(proc_tcpdump.poll() is not None):
+            command = self.adb_location + "adb pull " + self.pcap_save_directory + mp4_name + ' ' +\
+                self.save_directory + 'record/'
+            subprocess.check_call(command, shell=True)
 
 
             # 단말기 내부의 mp4파일 삭제
-            command = adb_location + "adb shell rm " + pcap_save_directory + '*.mp4'
+            command = self.adb_location + "adb shell rm " + self.pcap_save_directory + '*.mp4'
             subprocess.check_call(command, shell=True)
 
             # 단말기 내부의 pcap파일 삭제
-            command = adb_location + "adb shell rm " + pcap_save_directory + '*.pcap'
+            command = self.adb_location + "adb shell rm " + self.pcap_save_directory + '*.pcap'
             subprocess.check_call(command, shell=True)
 
             # 단말기의 앱 삭제
-            command = adb_location + "adb uninstall " + pkg_name
+            command = self.adb_location + "adb uninstall " + pkg_name
             subprocess.check_call(command, shell=True)
             logging.info(pkg_name + ' testing was finished')
 
