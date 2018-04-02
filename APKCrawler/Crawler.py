@@ -75,7 +75,7 @@ class Crawler:
             package_name = url.split('id=')[1]
             package_list.append(package_name)
 
-        return package_list[:2]
+        return package_list
 
     def __get_app_detail(self, package_list):
         """

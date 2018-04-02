@@ -1,4 +1,15 @@
-# Byte-compiled / optimized / DLL files
+# vim
+*.swp
+
+# selenium
+selenium/
+APKCrawler/chrome/
+
+# apk
+*.apk
+*.sqlite
+
+#Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -86,6 +97,10 @@ celerybeat-schedule
 .venv
 venv/
 ENV/
+bin/
+lib64
+pip-selfcheck.json
+pyvenv.cfg
 
 # Spyder project settings
 .spyderproject
