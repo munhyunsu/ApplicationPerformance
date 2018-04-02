@@ -27,6 +27,7 @@ class Crawler:
         self.is_desktop = is_desktop
 
         # 서버모드로 실행시켰다면 가상디스플레이 실행
+        # TODO: Xvfb
         if(not is_desktop):
             self.display = Display(visible=0, size=(800, 600))
             self.display.start()
