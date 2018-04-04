@@ -28,6 +28,7 @@ class Crawler:
 
         # 서버모드로 실행시켰다면 가상디스플레이 실행
         # TODO: Xvfb
+        # TODO: 해결 완료!!!: --headless 모드!
         if(not is_desktop):
             self.display = Display(visible=0, size=(800, 600))
             self.display.start()
