@@ -2,6 +2,9 @@
 
 import sys
 
+class Har(object):
+    pass
+
 def main(argv):
     pass
 
