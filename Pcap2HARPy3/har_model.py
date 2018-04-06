@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
 import sys
+import json
 
 class Har(object):
-    pass
+    def __init__(self):
+        pass
 
 def main(argv):
     pass
