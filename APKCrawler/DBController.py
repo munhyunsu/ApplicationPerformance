@@ -69,9 +69,7 @@ class DBController:
         category : 카테고리 이름
         """
         try:
-            self.cursor.execute('SELECT package FROM list WHERE category==(?)'\
-                ,(category[0],))
-            package_list = []
+            self.cursor.execute('SELECT package FROM list WHERE category = ?', (category,))
             total_data = self.cursor.fetchall()
             package_list = [row[0] for row in total_data]
         except Exception as e:
@@ -98,7 +96,7 @@ class DBController:
         최신정보로 업데이트 시킴. is_downloaded필드를 변경
         """
         try:
-            self.cursor.execute('UPDATE list SET updated_date = ?, is_downloaed = ? WHERE package = ?', (updated_date, False, package))
+            self.cursor.execute('UPDATE list SET updated_date = ?, is_downloaded = ? WHERE package = ?', (updated_date, False, package))
             self.connection.commit()
         except Exception as e:
             print('update_date error')
@@ -168,9 +166,18 @@ class DBController:
         """
         try:
             self.cursor.execute(\
-                "select package from list where is_downloaded LIKE ?",('%0%',))
+                "SELECT package FROM list WHERE is_downloaded LIKE ?", ('%0%',))
             package_list = self.cursor.fetchall()
         except Exception as e:
             self.connection.close()
             raise e
         return package_list
+
+    def update_is_downloaded(self, package, is_downloaded):
+        try:
+            self.cursor.execute('UPDATE list SET is_downloaded = ? WHERE package = ?', (package, is_downloaded))
+            self.connection.commit()
+        except Exception as e:
+            print('update is downloaded error')
+            self.connection.close()
+            raise e

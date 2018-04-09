@@ -191,8 +191,7 @@ class Crawler:
             url = category[1]
 
             # 기존 DB에 존재하던 카테고리별 패키지 리스트를 가져오기
-            old_package_list = self.db_connector\
-                .get_old_category_app_list(category)
+            old_package_list = self.db_connector.get_old_category_app_list(category)
 
             # 기존 DB 메타데이터의 상세정보를 플레이스토어에서 크롤링
             updated_app_list = self.__get_app_detail(old_package_list)
@@ -200,6 +199,7 @@ class Crawler:
             # 새로 생긴된 데이터들을 DB에 업데이트
             self.db_connector.update_app(updated_app_list, category_name)
         self.db_connector.commit_n_close()
+
 
     def update_apk(self):
         """
@@ -264,11 +264,10 @@ class Crawler:
 
 
             # apk 파일 다운로드가 성공하면 db에 True로 저장, 실패시 False로 저장
-            self.__download_apk(package_name, src)
-            #if(self.__download_apk(package_name, src)):
-            #    self.db_connector.update_isdownload(package_name, True)
-            #else:
-            #    self.db_connector.update_isdownload(package_name, False)
+            if(self.__download_apk(package_name, src)):
+                self.db_connector.update_is_downloaded(package_name, True)
+            else:
+                self.db_connector.update_is_downloaded(package_name, False)
 
         self.db_connector.commit_n_close()
 
