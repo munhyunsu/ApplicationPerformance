@@ -268,6 +268,7 @@ class Crawler:
                 self.db_connector.update_is_downloaded(package_name, True)
             else:
                 self.db_connector.update_is_downloaded(package_name, False)
+            time.sleep(2)
 
         self.db_connector.commit_n_close()
 
