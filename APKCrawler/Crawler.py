@@ -266,8 +266,10 @@ class Crawler:
             # apk 파일 다운로드가 성공하면 db에 True로 저장, 실패시 False로 저장
             if(self.__download_apk(package_name, src)):
                 self.db_connector.update_is_downloaded(package_name, True)
+                print(package_name, 'downloaded')
             else:
                 self.db_connector.update_is_downloaded(package_name, False)
+                print(package_name, 'no-downloaded')
             time.sleep(2)
 
         self.db_connector.commit_n_close()
