@@ -27,15 +27,17 @@ class Crawler:
         self.is_desktop = is_desktop
 
         # 서버모드로 실행시켰다면 가상디스플레이 실행
-        # TODO: Xvfb
-        # TODO: 해결 완료!!!: --headless 모드!
+        chrome_options = webdriver.ChromeOptions()
         if(not is_desktop):
-            self.display = Display(visible=0, size=(800, 600))
+            self.display = Display(visible=0, size=(1024, 768))
             self.display.start()
+            chrome_options.add_argument('--headless')
 
-        # 크롬 드라이버 실행 
-        self.chrome = webdriver.Chrome(config.get('Setting',\
-            'CHROME_DRIVER_DIRECTORY'))
+        # 크롬 드라이버 실행
+        self.chrome = webdriver.Chrome(
+                config.get('Setting', 'CHROME_DRIVER_DIRECTORY'),
+                chrome_options=chrome_options)
+        self.chrome.set_window_size(1024, 768)
 
         # 크롤링할 디렉토리 리스트 저장
         self.category_list = config.items('PlayStoreURL')
@@ -76,7 +78,7 @@ class Crawler:
             package_name = url.split('id=')[1]
             package_list.append(package_name)
 
-        return package_list
+        return package_list[0:10]
 
     def __get_app_detail(self, package_list):
         """
@@ -98,33 +100,25 @@ class Crawler:
             self.chrome.implicitly_wait(10)
 
             # 앱 이름, 이미지 소스, 최근 업데이트 날짜, 별점을 조회
-            # 원인은 파악하지 못했지만 exception발생하는 구간 존재
-            # TODO: Exception이 발생하는 구간을 정확하게 파악하여 예외처리
             try:
-                name = self.chrome.\
-                    find_element_by_css_selector('.id-app-title').text
-
-                img_src = self.chrome.\
-                    find_element_by_css_selector('.cover-image').\
-                        get_attribute('src')
-
-                updated_date = self.chrome.\
-                    find_elements_by_css_selector('.content')[0].text
-
-                ratings = self.chrome.\
-                    find_elements_by_css_selector('.rating-count')[0].text
-                # 숫자 3자리마다 쉼표가 들어가므로 제거
-                if ',' in ratings:
-                    ratings = ratings.replace(',','')
+                name = chrome.find_element_by_css_selector('h1[itemprop="name"]').text.strip()
             except:
-                print(package + " 오류 발생")
-                print(package + " name, img_src, update_date 가져오기 실패")
                 name = package
-                img_src = ''
-                updated_date = ''
-                ratings = ''
+            try:
+                img_src = self.chrome.find_element_by_css_selector('img[alt="Cover art"]').get_attribute('src')
+            except:
+                img_src = 'https://upload.wikimedia.org/wikipedia/en/4/48/Blank.JPG'
+            try:
+                updated_date = self.chrome.find_element_by_css_selector('span[class="htlgb"]').text.strip()
+            except:
+                updated_date = 'January 1, 2000'
+            try:
+                ratings = self.chrome.find_element_by_css_selector('meta[itemprop="ratingValue"]').get_attribute('content')
+            except:
+                ratings = -1
 
-            # [앱 이름, 패키지 이름, 이미지 소스, 최신업데이트 날짜, APK다운 여부]
+            # [앱 이름, 패키지 이름, 이미지 소스, 최신업데이트 날짜, 평점, APK다운 여부]
+            print('FromPlayStore', name, package, img_src, updated_date, ratings)
             detail_list.append([name, package, img_src, updated_date, ratings, False])
 
         return detail_list
