@@ -12,6 +12,8 @@ import requests
 import logging
 from DBController import DBController
 
+import code
+
 class Crawler:
 
     def __init__(self, is_desktop):
@@ -24,6 +26,7 @@ class Crawler:
         config = configparser.ConfigParser()
         config.read('config.ini')
         self.apk_directory = config.get('Setting','APK_DIRECTORY')
+        os.makedirs(self.apk_directory, exist_ok = True)
         self.is_desktop = is_desktop
 
         # 서버모드로 실행시켰다면 가상디스플레이 실행
@@ -78,7 +81,8 @@ class Crawler:
             package_name = url.split('id=')[1]
             package_list.append(package_name)
 
-        return package_list[0:10]
+        #return package_list
+        return package_list
 
     def __get_app_detail(self, package_list):
         """
@@ -101,7 +105,7 @@ class Crawler:
 
             # 앱 이름, 이미지 소스, 최근 업데이트 날짜, 별점을 조회
             try:
-                name = chrome.find_element_by_css_selector('h1[itemprop="name"]').text.strip()
+                name = self.chrome.find_element_by_css_selector('h1[itemprop="name"]').text.strip()
             except:
                 name = package
             try:
@@ -120,6 +124,7 @@ class Crawler:
             # [앱 이름, 패키지 이름, 이미지 소스, 최신업데이트 날짜, 평점, APK다운 여부]
             print('FromPlayStore', name, package, img_src, updated_date, ratings)
             detail_list.append([name, package, img_src, updated_date, ratings, False])
+            time.sleep(2)
 
         return detail_list
 

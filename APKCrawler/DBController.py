@@ -47,7 +47,7 @@ class DBController:
                     app_name,
                     package,
                     img_src,
-                    update_date,
+                    updated_date,
                     ratings,
                     is_downloaded,
                     category
@@ -92,18 +92,13 @@ class DBController:
             self.connection.close()
             raise e
 
-    def update_date(self, package_name, update_date):
+    def update_date(self, package, updated_date):
         """
         앱 메타정보를 입력으로 받아 기존DB에 존재하던 앱정보를
         최신정보로 업데이트 시킴. is_downloaded필드를 변경
         """
         try:
-            self.cursor.execute(\
-                "update list set update_date=? where package=?",\
-                (update_date, package_name))
-            self.cursor.execute(\
-                "update list set is_downloaded=? where package=?",\
-                (False, package_name))
+            self.cursor.execute('UPDATE list SET updated_date = ?, is_downloaed = ? WHERE package = ?', (updated_date, False, package))
             self.connection.commit()
         except Exception as e:
             print('update_date error')
@@ -119,55 +114,46 @@ class DBController:
 
         all_app_list = self.get_all_app_name_list()
 
-        for new_app in update_app_list:
-            new_app_name = new_app[0]
-            package = new_app[1]
-            img_src = new_app[2]
-            update_date = new_app[3]
-            ratings = new_app[4]
-            is_downloaded = new_app[5]
+        for app in update_app_list:
+            app_name = app[0]
+            package = app[1]
+            img_src = app[2]
+            updated_date = app[3]
+            ratings = app[4]
+            is_downloaded = app[5]
 
             # 기존 DB에 존재하던 앱이라면 업데이트날짜를 비교해서 
             # 동일하면 그대로
             # 업데이트가 날짜가 다르다면(업데이트가 존재한다면)
             # 업데이트 날짜 수정 및 is_downloaded 컬럼 수정
-            self.cursor.execute(\
-                "select * from list where app_name=(?) LIMIT 1",\
-                (new_app_name,))
+            self.cursor.execute('SELECT * FROM list WHERE app_name=(?) LIMIT 1', (app_name,))
 
-            # 기존 DB에 없던 앱이라면 새로 DB에 추가시힘
-            #app_details = self.cursor.fetchone()[0]
+            # 기존 DB에 없던 앱이라면 새로 DB에 추가
             data = self.cursor.fetchone()
             if data == None:
-                self.insert_app(new_app_name,package,img_src,update_date,ratings,is_downloaded,category)
-                logging.info(new_app_name + ' is inserted')
+                self.insert_app(app_name, package, img_src, updated_date, ratings, is_downloaded, category)
+                #print(new_app_name, 'is inserted')
                 continue
 
-            # 기존 DB에 있는 앱이라면 업데이트 날짜 비교한뒤 
-            # 날짜가 다르면 업데이트
-            old_date = cursor.fetchone()
-            old_update_date = old_data[3]
+            # 기존 DB에 있는 앱이라면 업데이트 날짜 비교한뒤 날짜가 다르면 업데이트
+            old_updated_date = data[3]
 
-            if old_update_date == app_update_date:
-                logging.info(new_app_name + ' is already updated')
+            if old_updated_date == updated_date:
+                print(app_name, 'is already updated')
                 continue
             else:
-                self.update_date(package, update_date)
-                logging.info(new_app_name + ' is updated')
+                self.update_date(package, updated_date)
+                #logging.info(new_app_name + ' is updated')
 
 
-    def insert_app(self, new_app_name, package, img_src, update_date,\
-                    ratings, is_downloaded, category):
+    def insert_app(self, app_name, package, img_src, updated_date, ratings, is_downloaded, category):
         """
         (public)
         기존DB에 없던 앱을 DB에 추가
         """
         try:
-            self.cursor.execute("INSERT INTO list VALUES (?,?,?,?,?,?,?)",\
-                (new_app_name, package, img_src, update_date, ratings,\
-                    is_downloaded, category))
-            logging.info(str(datetime.datetime.now()) + \
-                " - new record " + new_app_name + "is inserted in DB.")
+            self.cursor.execute('INSERT INTO list VALUES (?, ?, ?, ?, ?, ?, ?)', (app_name, package, img_src, updated_date, ratings, is_downloaded, category))
+            print(str(datetime.datetime.now()), app_name, "is first inserted in DB")
         except Exception as e:
             self.connection.close()
             raise e
