@@ -175,7 +175,7 @@ class DBController:
 
     def update_is_downloaded(self, package, is_downloaded):
         try:
-            self.cursor.execute('UPDATE list SET is_downloaded = ? WHERE package = ?', (package, is_downloaded))
+            self.cursor.execute('UPDATE list SET is_downloaded = ? WHERE package = ?', (is_downloaded, package))
             self.connection.commit()
         except Exception as e:
             print('update is downloaded error')
