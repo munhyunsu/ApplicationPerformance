@@ -41,6 +41,7 @@ class Crawler:
                 config.get('Setting', 'CHROME_DRIVER_DIRECTORY'),
                 chrome_options=chrome_options)
         self.chrome.set_window_size(1024, 768)
+        self.chrome.set_page_load_timeout(30)
 
         # 크롤링할 디렉토리 리스트 저장
         self.category_list = config.items('PlayStoreURL')
