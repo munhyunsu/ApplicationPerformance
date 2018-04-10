@@ -142,7 +142,6 @@ class DBController:
                 continue
             else:
                 self.update_date(package, updated_date)
-                #logging.info(new_app_name + ' is updated')
 
 
     def insert_app(self, app_name, package, img_src, updated_date, ratings, is_downloaded, category):

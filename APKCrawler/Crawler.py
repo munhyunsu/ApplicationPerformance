@@ -41,7 +41,7 @@ class Crawler:
                 config.get('Setting', 'CHROME_DRIVER_DIRECTORY'),
                 chrome_options=chrome_options)
         self.chrome.set_window_size(1024, 768)
-        self.chrome.set_page_load_timeout(30)
+        #self.chrome.set_page_load_timeout(30)
 
         # 크롤링할 디렉토리 리스트 저장
         self.category_list = config.items('PlayStoreURL')
@@ -223,7 +223,7 @@ class Crawler:
 
             # 검색결과가 없으면 apk를 다운받을 수 없으므로 통과
             if len(search_titles) == 0:
-                logging.info(package_name + " is not searched")
+                print(package_name + " is not searched")
                 continue
 
             # 검색결과와 일치하는 앱의 href 속성에서 다운로드 링크 추출
@@ -238,7 +238,7 @@ class Crawler:
 
             # 검색결과가 여러개 나오지만 패키지명이 일치하지 않는다면 통과
             if link =='':
-                logging.info(package_name + ' is not searched in APKpure')
+                print(package_name + ' is not searched in APKpure')
                 continue
 
             # apk download링크로 이동
@@ -260,7 +260,7 @@ class Crawler:
 
                 src = iframe.get_attribute('src')
             except:
-                logging.info(package_name + " does not have href or iframe")
+                print(package_name + " does not have href or iframe")
                 continue
 
 
