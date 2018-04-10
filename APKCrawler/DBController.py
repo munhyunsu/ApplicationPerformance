@@ -97,6 +97,7 @@ class DBController:
         """
         try:
             self.cursor.execute('UPDATE list SET updated_date = ?, is_downloaded = ? WHERE package = ?', (updated_date, False, package))
+            print(package, 'is updated')
             self.connection.commit()
         except Exception as e:
             print('update_date error')
