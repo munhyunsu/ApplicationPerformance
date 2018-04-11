@@ -44,7 +44,7 @@ def main(argv):
     path = argv[1]
 
     for path in get_files(path, '.pcap'):
-        package = (path.split('/')[-1])[:-4]
+        package = (path.split('/')[-1])[:-5]
         rtt = get_rtt_avg(path)
         if rtt > 0:
             print(package, rtt, sep = ', ')
