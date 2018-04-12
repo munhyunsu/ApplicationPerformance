@@ -11,6 +11,7 @@ import configparser
 import requests
 import logging
 from DBController import DBController
+import random
 
 import code
 
@@ -161,6 +162,7 @@ class Crawler:
         (public)
         카테고리 별 플레이스토어 인기차트 크롤링 및 DB 저장
         """
+        # TODO: list ranomization needed
         for category in self.category_list:
             category_name = category[0]
             url = category[1]
