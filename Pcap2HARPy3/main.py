@@ -75,3 +75,12 @@ with open(outputfile, 'w') as f:
 
 if options.resource_usage:
     print_rusage()
+
+
+def main(argv):
+    print('Packet Capture to HTTP Archive Ver. 3')
+
+
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv))
