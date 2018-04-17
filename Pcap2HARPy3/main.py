@@ -5,13 +5,18 @@ import sys
 import argparse
 
 
-import settings
-
-
+import settings # Global variable module
+from pcap_reader import PcapReader
+from har_session import Session
 
 def main(argv = sys.argv):
     print('Packet Capture to HTTP Archive Ver. 3')
-    print('Main settings:', settings.input)
+
+    pcapreader = PcapReader(path = settings.input)
+
+    sessions = Session(pcapreader = pcapreader)
+
+    print('Main settings:', settings.output)
 
 
 if __name__ == '__main__':
@@ -44,8 +49,7 @@ if __name__ == '__main__':
                         required = True)
     parser.add_argument('-o', '--output',
                         action = 'store',
-                        dest = 'output',
-                        required = True)
+                        dest = 'output')
     options = parser.parse_args()
     
     settings.pages = options.pages
@@ -56,8 +60,8 @@ if __name__ == '__main__':
     settings.strict_http_parsing = options.strict_http_parsing
     settings.logfile = options.logfile
     settings.input = options.input
-    settings.output = options.output
-
-
+    settings.output = options.input + '.har'
+    if options.output != None:
+        settings.output = options.output
 
     sys.exit(main())
