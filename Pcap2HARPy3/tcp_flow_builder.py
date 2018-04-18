@@ -3,4 +3,5 @@
 import settings
 
 class TCPFlowBuilder(object):
-    pass
+    def __init__(self):
+        pass
