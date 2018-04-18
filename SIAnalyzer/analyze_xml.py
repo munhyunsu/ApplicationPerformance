@@ -107,28 +107,91 @@ def get_retrans_sum(string):
     except:
         return -1
 
+import xml.etree.ElementTree as ET
+
+def get_xml_size(path):
+    tree = ET.parse(path)
+    root = tree.getroot()
+    it = root.iter()
+
+    size = 0
+    for item in it:
+        size = size + 1
+
+    return size
+
+
+def get_last_size(path):
+    tree = ET.parse(path)
+    root = tree.getroot()
+    it = root.iter()
+
+    size = 0
+    for item in it:
+        if len(item.getchildren()) == 0:
+            size = size + 1
+
+    return size
+
+
+
+def get_ads_size(path):
+    tree = ET.parse(path)
+    root = tree.getroot()
+    it = root.iter()
+
+    size = 0
+    for item in it:
+        resource = item.get('resource-id')
+        if resource == None:
+            continue
+        resource = resource.lower()
+        if 'ad' in resource:
+            size = size + 1
+
+    return size
+
+def get_img_size(path):
+    tree = ET.parse(path)
+    root = tree.getroot()
+    it = root.iter()
+
+    size = 0
+    for item in it:
+        resource = item.get('class')
+        if resource == None:
+            continue
+        resource = resource.lower()
+        if ('img' in resource) or ('image' in resource):
+            size = size + 1
+
+    return size
+
+
 
 
 
 def main(argv):
     path = argv[1]
 
-    print('package', 'rtt', 'idletime', 'xmittime', 'tcp', 
-          'http', 'https', 'retrans', sep = ',')
-    for path in get_files(path, '.pcap'):
-        string = get_subprocess_stdout(path)
+    pack_max = dict()
+    pack_result = dict()
 
-        package = (path.split('/')[-1])[:-5]
-        rtt = get_rttavg_avg(string)
-        idletime = get_idletime_avg(string)
-        xmittime = get_dataxmittime_avg(string)
-        tcp = get_tcp_len(string)
-        http = get_http_len(string)
-        https = get_https_len(string)
-        retrans = get_retrans_sum(string)
-        if rtt > 0:
-            print(package, rtt, idletime, xmittime, tcp,
-                  http, https, retrans, sep = ',')
+    for path in get_files(path, '.xml', recursive = True):
+        package = path.split('/')[-2]
+        number = int((path.split('/')[-1])[:-4])
+        if pack_max.get(package, 0) < number:
+            pack_max[package] = number
+            pack_result[package] = [get_xml_size(path), 
+                                    get_last_size(path),
+                                    get_ads_size(path),
+                                    get_img_size(path)]
+
+    for key in pack_result.keys():
+        item = pack_result[key]
+        print(key, item[0], item[1], item[2], item[3], sep = ',')
+
+
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
