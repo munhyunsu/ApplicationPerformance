@@ -3,4 +3,5 @@
 import settings
 
 class UDPFlowBuilder(object):
-    pass
+    def __init__(self):
+        pass
