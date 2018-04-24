@@ -8,6 +8,8 @@ import random
 import re
 from xml.etree.ElementTree import parse
 
+# TODO: Why it stops?
+
 class DeviceController:
 
     def __init__(self):
