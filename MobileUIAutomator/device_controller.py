@@ -189,6 +189,9 @@ class DeviceController:
                     else:
                         count = count + 1
 
+
+                    # TODO: xml 노트 카운트 계산 해야함
+
                     # 노드개수가 5개의 xml파일동안 동일하면 렌더링 완료
                     if((count == 3) | (total_count >= 20)):
                         break
