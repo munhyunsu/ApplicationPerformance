@@ -16,6 +16,9 @@ def main(argv = sys.argv):
 
     sessions = Session(pcapreader = pcapreader)
 
+    with open(outputfile, 'w') as f:
+        json.dump(sessions, f)
+
     print('Main settings:', settings.output)
 
 
@@ -63,5 +66,7 @@ if __name__ == '__main__':
     settings.output = options.input + '.har'
     if options.output != None:
         settings.output = options.output
+
+    
 
     sys.exit(main())
