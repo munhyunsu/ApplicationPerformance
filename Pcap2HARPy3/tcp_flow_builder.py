@@ -5,3 +5,6 @@ import settings
 class TCPFlowBuilder(object):
     def __init__(self):
         pass
+
+    def parse(self):
+        pass
