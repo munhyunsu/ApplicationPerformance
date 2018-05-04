@@ -12,6 +12,8 @@ from har_session import Session
 def main(argv = sys.argv):
     print('Packet Capture to HTTP Archive Ver. 3')
 
+    outputfile = argv[1]
+
     pcapreader = PcapReader(path = settings.input)
 
     sessions = Session(pcapreader = pcapreader)
