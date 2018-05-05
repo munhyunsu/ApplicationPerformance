@@ -143,7 +143,7 @@ class DeviceController:
             time.sleep(5)
 
             # 총 5개의 이벤트 발생
-            num_of_event = 1
+            num_of_event = 5
 
             while(event_index < num_of_event):
                 prev_count = -1
