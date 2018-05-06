@@ -3,8 +3,12 @@
 
 import settings
 
+import dpkg
+
 from tcp_flow_builder import TCPFlowBuilder
 from udp_flow_builder import UDPFlowBuilder
+
+
 
 
 class PacketDispatcher(object):
