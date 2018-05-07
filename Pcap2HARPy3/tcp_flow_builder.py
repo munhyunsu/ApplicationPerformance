@@ -4,7 +4,7 @@ import settings
 
 class TCPFlowBuilder(object):
     def __init__(self):
-        pass
+        self.flow = dict()
 
     def parse(self):
         pass
