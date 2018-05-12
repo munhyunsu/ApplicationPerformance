@@ -7,6 +7,7 @@ class HarDecoder(object):
         pass
 
 def main(argv):
+    pass
     
 
 
