@@ -5,7 +5,7 @@ import json
 
 class Har(object):
     def __init__(self):
-        pass
+        self.archive = dict()
 
 def main(argv):
     pass
