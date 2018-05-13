@@ -69,6 +69,4 @@ if __name__ == '__main__':
     if options.output != None:
         settings.output = options.output
 
-    
-
     sys.exit(main())
