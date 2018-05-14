@@ -4,22 +4,26 @@ import sys
 
 import argparse
 
+import json
 
 import settings # Global variable module
 from pcap_reader import PcapReader
 from har_session import Session
+from har_encoder import HAREncoder
+
 
 def main(argv = sys.argv):
     print('Packet Capture to HTTP Archive Ver. 3')
 
-    outputfile = argv[1]
+    print('Input file: {0}'.format(settings.input))
 
-    pcapreader = PcapReader(path = settings.input)
+    pcapreader = PcapReader(input_path = settings.input)
 
     sessions = Session(pcapreader = pcapreader)
 
-    with open(outputfile, 'w') as f:
-        json.dump(sessions, f)
+    print(json.dumps(sessions, cls = HAREncoder))
+    with open(settings.output, 'w') as f:
+        json.dump(sessions, f, cls = HAREncoder)
 
     print('Main settings:', settings.output)
 
