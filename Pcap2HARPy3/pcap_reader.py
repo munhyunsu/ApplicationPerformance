@@ -3,7 +3,7 @@
 
 import settings
 
-import dpkg
+import dpkt
 
 from tcp_flow_builder import TCPFlowBuilder
 from udp_flow_builder import UDPFlowBuilder
