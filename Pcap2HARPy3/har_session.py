@@ -99,3 +99,9 @@ class Session(object):
                             'response': response,
                             'cache': {},
                             'timings': timing})
+
+def request_from_pkt(pkt):
+    pass
+
+def response_from_pkt(pkt):
+    pass
