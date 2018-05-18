@@ -105,3 +105,6 @@ def request_from_pkt(pkt):
 
 def response_from_pkt(pkt):
     pass
+
+def timing_from_pkt(pkt):
+    pass
