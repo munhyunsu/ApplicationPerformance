@@ -101,10 +101,43 @@ class Session(object):
                             'timings': timing})
 
 def request_from_pkt(pkt):
+    request = {
+        'method': 'GET',
+        'url': socket.inet_ntoa(ip.dst),
+        'httpVersion': 'HTTP/1.1',
+        'cookies': [],
+        'headers': [],
+        'queryString': [],
+        'headersSize': tcp.off*4,
+        'bodySize': -1
+    }
     pass
 
 def response_from_pkt(pkt):
+    response = {
+        'status': 200,
+        'statusText': 'OK',
+        'httpVersion': 'HTTP/1.1',
+        'cookies': [],
+        'headers': [],
+        'content': {
+            'size': ip.len - (tcp.off*4),
+            'mimeType': 'application/x-www-form-urlencoded'
+        },
+        'redirectURL': '',
+        'headersSize': tcp.off*4,
+        'bodySize': -1,
+    }
     pass
 
 def timing_from_pkt(pkt):
+    timing = {
+        'blocked': -1,
+        'dns': -1,
+        'connect': -1,
+        'send': 20,
+        'wait': 30,
+        'receive': 25,
+        'ssl': -1,
+    }
     pass
