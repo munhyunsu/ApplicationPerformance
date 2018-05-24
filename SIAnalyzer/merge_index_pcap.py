@@ -35,22 +35,21 @@ def main(argv):
         ads = get_ads_dict(path, ads)
 
     tpath = ['180410.csv', '180411.csv', '180415.csv']
+    print('package', 'speedindex', 'rtt', 'tcp', 'volume', 
+          'ttfb', 'retrans', 'layout', 'ads', 'image', sep = ',')
     for path in tpath:
         with open(path) as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 try:
                     print(row['package'],
-                          sis[row['package']],
+                          float(sis[row['package']])*100,
                           row['rtt'],
-                          row['idletime'],
-                          row['xmittime'],
                           row['tcp'],
-                          row['http'],
-                          row['https'],
+                          row['trafficvolume'],
+                          row['ttfb'],
                           row['retrans'],
                           ads[row['package']][0],
-                          ads[row['package']][1],
                           ads[row['package']][2],
                           ads[row['package']][3],
                           sep = ',')

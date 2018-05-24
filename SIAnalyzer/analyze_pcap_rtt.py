@@ -25,10 +25,12 @@ def get_files(path, ext = '', recursive = False):
 
 
 def get_subprocess_stdout(path):
-    cp = subprocess.run(['tcptrace', '-lr', path], 
+    cp = subprocess.run(['tcptrace', '--output_dir=./tmp', '-lrZ', path], 
             stdout = subprocess.PIPE,
             stderr = subprocess.DEVNULL,
             universal_newlines = True)
+
+
 
     return cp.stdout
 
@@ -108,13 +110,39 @@ def get_retrans_sum(string):
         return -1
 
 
+def get_trafficvolume_sum(string):
+    try:
+        sumation = sum(map(int,
+                       re.findall('unique bytes sent:(?:\s)+(\d+)', 
+                       string)))
+        return sumation
+    except:
+        return -1
+
+
+
+def get_ttfb_avg(string):
+    try:
+        result = list()
+        for path in get_files('./tmp', '.dat'):
+            cp = subprocess.run(['cat', path],
+                                stdout = subprocess.PIPE,
+                                stderr = subprocess.DEVNULL,
+                                universal_newlines = True)
+            for line in cp.stdout.splitlines():
+                result.append(int(line.split(' ')[1]))
+        mean = statistics.mean(result)
+        return mean
+    except:
+        return 0
+
 
 
 def main(argv):
     path = argv[1]
 
     print('package', 'rtt', 'idletime', 'xmittime', 'tcp', 
-          'http', 'https', 'retrans', sep = ',')
+          'http', 'https', 'retrans', 'trafficvolume', 'ttfb', sep = ',')
     for path in get_files(path, '.pcap'):
         string = get_subprocess_stdout(path)
 
@@ -126,9 +154,13 @@ def main(argv):
         http = get_http_len(string)
         https = get_https_len(string)
         retrans = get_retrans_sum(string)
+        trafficvolume = get_trafficvolume_sum(string)
+        ttfb = get_ttfb_avg(string)
         if rtt > 0:
             print(package, rtt, idletime, xmittime, tcp,
-                  http, https, retrans, sep = ',')
+                  http, https, retrans, trafficvolume, ttfb, sep = ',')
+
+        subprocess.run('rm ./tmp/*', shell = True)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
