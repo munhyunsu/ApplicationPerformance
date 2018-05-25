@@ -8,6 +8,7 @@
 # selenium
 selenium/
 APKCrawler/chrome/
+share/
 
 # apk
 *.apk
