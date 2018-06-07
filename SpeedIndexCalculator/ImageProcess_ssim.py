@@ -10,9 +10,9 @@ import sys
 import logging
 import logging.config
 
-INPUTDIR = '/home/harny/SharedFolder/Mobile/180525/record2/'
-INPUTDIR2 = '/media/sf_SharedFolder/Mobile/180525/record3/'
-OUTPUTDIR = '/media/sf_SharedFolder/Mobile/180525/video2/'
+INPUTDIR = '/home/harny/SharedFolder/Mobile/180415/record2/'
+INPUTDIR2 = '/home/harny/SharedFolder/Mobile/180415/record3/'
+OUTPUTDIR = '/home/harny/SharedFolder/Mobile/180415/video2/'
 
 
 def color_based(image1, image2):
@@ -108,7 +108,7 @@ def run_ffmpeg(video_name):
     """
     # mp4파일 이름으로 디렉토리 생성
     try:
-        os.makedirs(str(video_name))
+        os.makedirs(OUTPUTDIR + str(video_name), exist_ok = True)
     except FileExistsError as e:
         print (e)
     except Exception as e:
@@ -117,7 +117,7 @@ def run_ffmpeg(video_name):
 
     # ffmpeg 실행
     # LuHa: fps=2 로 변경
-    command = 'ffmpeg -i ' + str(video_name) + '.mp4 -vf fps=10 ' + str(video_name) + '/out%03d.jpg'
+    command = 'ffmpeg -i ' + INPUTDIR+str(video_name) + '.mp4 -vf fps=10 ' + OUTPUTDIR+str(video_name) + '/out%03d.jpg'
     try:
         ffmpeg = subprocess.check_call(command, stdout=subprocess.PIPE, shell=True)
     except Exception as e:
@@ -223,7 +223,7 @@ def main():
 
         list_similarity = get_similarity_list(files_list)
         # list_similarity_last = get_similarity_list_last(files_list)
-        print(list_similarity_last)
+        # print(list_similarity_last)
         logging.info(video_name + ' list_similarity : ' + str(list_similarity))
         speed_list = get_speed_index_of_first_activity(list_similarity)
         logging.info(video_name + ' speed_list : ' + str(speed_list))
