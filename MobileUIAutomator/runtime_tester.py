@@ -2,6 +2,8 @@
 
 import sys
 
+from device_controller import AndroidController
+
 def main(argv = sys.argv):
     print('Running runtime tester')
 

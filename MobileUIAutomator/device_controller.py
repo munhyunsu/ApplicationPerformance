@@ -8,6 +8,12 @@ import random
 import re
 from xml.etree.ElementTree import parse
 
+class AndroidController:
+    def __init__(self):
+        # adb connect
+        pass
+
+
 # TODO: Why it stops?
 
 class DeviceController:
