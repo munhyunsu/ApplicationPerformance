@@ -20,6 +20,12 @@ class AndroidController:
         pass
 
 
+class PermissionController:
+    def __init__(self):
+        '''Permission grant controller
+        '''
+        pass
+
 
 # TODO: Why it stops?
 class DeviceController:
