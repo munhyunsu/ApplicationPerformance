@@ -26,6 +26,11 @@ class PermissionController:
         '''
         pass
 
+    def grant_permission(self):
+        '''
+        :return:
+        '''
+        pass
 
 # TODO: Why it stops?
 class DeviceController:
