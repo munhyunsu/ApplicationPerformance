@@ -11,13 +11,21 @@ from xml.etree.ElementTree import parse
 class AndroidController:
     def commandb(self):
         '''Command blocking
+        :return: None
         '''
         pass
 
     def commandu(self):
         '''Command unblocking
+        :return: None
         '''
         pass
+
+    def pre_execute(self):
+        '''
+        TODO(LuHa): Create directory inside device and host
+        :return: None
+        '''
 
 
 class PermissionController:
