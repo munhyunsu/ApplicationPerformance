@@ -1,4 +1,5 @@
+numpy
+cython
 Pillow
 scipy
-numpy
 scikit-image
