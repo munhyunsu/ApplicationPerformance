@@ -1,13 +1,17 @@
 from django.http import HttpResponse
+from django.template import loader
 
 
 def index(request):
-    return HttpResponse('you are in index page')
+    template = loader.get_template('index.html')
+    return HttpResponse(template.render())
 
 
 def result(request):
-    return HttpResponse('You are in result page')
+    template = loader.get_template('result.html')
+    return HttpResponse(template.render())
 
 
 def advice(request):
-    return HttpResponse('You are in advice page')
+    template = loader.get_template('advice.html')
+    return HttpResponse(template.render())
