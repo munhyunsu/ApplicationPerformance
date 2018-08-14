@@ -1,3 +1,20 @@
 body {
-    background-color: #6DDCBD
+    font-family: sans-serif, NanumGothic;
+    background-color: #ffe7ef;
+}
+
+table {
+    font-family: sans-serif, arial;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #e1cbd3;
 }
