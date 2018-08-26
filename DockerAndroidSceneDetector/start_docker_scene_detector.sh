@@ -6,6 +6,5 @@ docker run --rm \
   -u dnlab \
   -i \
   -t \
-  ubuntu:dnlab \
   --name scene_detector \
-
+  ubuntu:dnlab
