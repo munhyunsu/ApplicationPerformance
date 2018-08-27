@@ -1,4 +1,6 @@
-
+apptestsite/
+db.sqlite3
+manage.py
 
 # venv
 venv/
