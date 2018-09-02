@@ -14,6 +14,7 @@
   - Automatic execute app
 - Scene detection
 
-
+# Usage
+- Add PATH of Android SDK's bin to virtual environment PATH
 
 ## Project based on Macgongmon's one
