@@ -13,6 +13,8 @@
 - Device Control
   - Automatic execute app
 - Scene detection
+  - XML, pcap 
+
 
 # Usage
 - Add PATH of Android SDK's bin to virtual environment PATH
