@@ -12,9 +12,9 @@
   - from APKPure.com
 - Device Control
   - Automatic execute app
+  - Capture network traffic
 - Scene detection
   - XML, pcap 
-
 
 # Usage
 - Add PATH of Android SDK's bin to virtual environment PATH
