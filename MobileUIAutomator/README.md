@@ -1,5 +1,6 @@
 # TODO
 - Android Virtual Device!
+- Detect rendering completion
 
 # Experiments Step
 1. Search target apk files(or parse target app list)
