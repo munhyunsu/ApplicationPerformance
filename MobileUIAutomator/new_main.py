@@ -254,3 +254,6 @@ def main(argv=sys.argv):
 
 if __name__ == '__main__':
     main()
+
+# ERROR
+# adb: failed to install Gmail_v8.8.26.211559306.release_apkpure.com.apk: Failure [INSTALL_FAILED_ALREADY_EXISTS: Attempt to re-install com.google.android.gm without first uninstalling.]
