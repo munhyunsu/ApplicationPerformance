@@ -91,7 +91,11 @@ def mp4_to_jpgs(mp4_dir):
 
 
 def main(argv = sys.argv):
+    '''Need one arguments
+    arg1 = input path
+    '''
 #    mp4_to_jpgs(argv[1])
+    # mid results
     for app_dir in get_app_dirs(argv[1]):
         check_thresholds(app_dir)
 
