@@ -4,3 +4,5 @@
 
 ## Database schema
 - package\_name
+- speedindex
+- tcp counts
