@@ -9,22 +9,29 @@
 <body>
     <h1> Application Speed Index </h1>
     <h2> Main Page </h2>
-    <table>
+    <table id="applist">
         <tr>
-            <td>wow</td>
-            <td>wow2</td>
-            <td>wow3</td>
+            <th>Package Name</th>
+            <th>Speed Index</th>
+            <th>TCP connections</th>
+            <th>RTT</th>
+            <th>Retransmission</th>
+            <th>Layouts</th>
+            <th>Images</th>
+            <th>Ads</th>
         </tr>
-        <tr>
-            <td>wow</td>
-            <td>wow2</td>
-            <td>wow3</td>
-        </tr>
-        <tr>
-            <td>wow</td>
-            <td>wow2</td>
-            <td>wow3</td>
-        </tr>
+        {% for row in result %}
+            <tr>
+                <td><a href="result?package={{row.packagename}}">{{row.packagename}}</a></td>
+                <td>{{row.si}}</td>
+                <td>{{row.tcp}}</td>
+                <td>{{row.rtt}}</td>
+                <td>{{row.rexmit}}</td>
+                <td>{{row.layout}}</td>
+                <td>{{row.image}}</td>
+                <td>{{row.ads}}</td>
+            </tr>
+        {% endfor %}
     </table>
 </body>
 </html>

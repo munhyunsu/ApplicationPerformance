@@ -9,7 +9,7 @@ table {
     width: 100%;
 }
 
-td, th {
+td, th{
     border: 1px solid #dddddd;
     text-align: left;
     padding: 8px;
@@ -18,3 +18,18 @@ td, th {
 tr:nth-child(even) {
     background-color: #e1cbd3;
 }
+
+tr:hover {background-color: #ddd;}
+
+th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #8499af;
+    color: white;
+}
+
+
+
+
+
