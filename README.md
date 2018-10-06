@@ -13,6 +13,7 @@
 - Device Control
   - Automatic execute app
   - Capture network traffic
+  - Runtime monkey runner
 - Scene detection
   - XML, pcap 
 
