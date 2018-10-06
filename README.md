@@ -16,6 +16,7 @@
   - Runtime monkey runner
 - Scene detection
   - XML, pcap 
+  - Runtime index scean detection
 
 # Usage
 - Add PATH of Android SDK's bin to virtual environment PATH
