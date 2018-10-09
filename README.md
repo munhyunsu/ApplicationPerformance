@@ -17,6 +17,8 @@
 - Scene detection
   - XML, pcap 
   - Runtime index scean detection
+- Recognize request/response
+
 
 # Usage
 - Add PATH of Android SDK's bin to virtual environment PATH
