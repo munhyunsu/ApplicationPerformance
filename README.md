@@ -19,6 +19,7 @@
   - Runtime index scean detection
 - Recognize request/response
 - Wrapper test!!
+  - Android Projects
 
 
 # Usage
