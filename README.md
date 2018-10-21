@@ -18,9 +18,7 @@
   - XML, pcap 
   - Runtime index scean detection
 - Recognize request/response
-- Wrapper test!!
-  - Android Projects
-
+- Wrapper test
 
 # Usage
 - Add PATH of Android SDK's bin to virtual environment PATH
