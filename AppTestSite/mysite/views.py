@@ -41,5 +41,5 @@ def result(request):
 
 
 def advice(request):
-    template = loader.get_template('advice.html')
+    template = loader.get_template('mysite/templates/advice.html')
     return HttpResponse(template.render())
