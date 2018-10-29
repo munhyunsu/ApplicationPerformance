@@ -1,37 +1,134 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    {% load static %}#}
+{#    <link rel="stylesheet", type="text/css", href="{% static "index.css" %}">#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Index page</title>#}
+{#</head>#}
+{#<body>#}
+{#    <h1> Application Speed Index </h1>#}
+{#    <h2> Main Page </h2>#}
+{#    <table id="applist">#}
+{#        <tr>#}
+{#            <th>Package Name</th>#}
+{#            <th>Speed Index</th>#}
+{#            <th>TCP connections</th>#}
+{#            <th>RTT</th>#}
+{#            <th>Retransmission</th>#}
+{#            <th>Layouts</th>#}
+{#            <th>Images</th>#}
+{#            <th>Ads</th>#}
+{#        </tr>#}
+{#        {% for row in result %}#}
+{#            <tr>#}
+{#                <td><a href="result?package={{row.packagename}}">{{row.packagename}}</a></td>#}
+{#                <td>{{row.si}}</td>#}
+{#                <td>{{row.tcp}}</td>#}
+{#                <td>{{row.rtt}}</td>#}
+{#                <td>{{row.rexmit}}</td>#}
+{#                <td>{{row.layout}}</td>#}
+{#                <td>{{row.image}}</td>#}
+{#                <td>{{row.ads}}</td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{#</body>#}
+{#</html>#}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     {% load static %}
-    <link rel="stylesheet", type="text/css", href="{% static "index.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}">
     <meta charset="UTF-8">
-    <title>Index page</title>
+    <title>Application Speed Index by LuHa</title>
 </head>
 <body>
-    <h1> Application Speed Index </h1>
-    <h2> Main Page </h2>
-    <table id="applist">
-        <tr>
-            <th>Package Name</th>
-            <th>Speed Index</th>
-            <th>TCP connections</th>
-            <th>RTT</th>
-            <th>Retransmission</th>
-            <th>Layouts</th>
-            <th>Images</th>
-            <th>Ads</th>
-        </tr>
-        {% for row in result %}
-            <tr>
-                <td><a href="result?package={{row.packagename}}">{{row.packagename}}</a></td>
-                <td>{{row.si}}</td>
-                <td>{{row.tcp}}</td>
-                <td>{{row.rtt}}</td>
-                <td>{{row.rexmit}}</td>
-                <td>{{row.layout}}</td>
-                <td>{{row.image}}</td>
-                <td>{{row.ads}}</td>
-            </tr>
-        {% endfor %}
-    </table>
+<div class="header" align="center">
+    <h1>
+        <img src="{% static "img/logo.png" %}" class="logo" align="middle"/>
+        Application Speed Index
+        <img src="{% static "img/cnu_logo.jpg" %}" class="logo" align="middle"/>
+    </h1>
+</div>
+<div class="row">
+    <!-- Button to open the modal login form -->
+    <div align="center">
+        <img src="{% static "img/load_data.png" %}" onclick="document.getElementById('id01').style.display='block'"
+             class="avatar"/>
+        <img src="{% static "img/new_data.png" %}" onclick="document.getElementById('id02').style.display='block'"
+             class="avatar"/>
+    </div>
+
+    <!-- The Modal -->
+    <div id="id01" class="modal">
+  <span onclick="document.getElementById('id01').style.display='none'"
+        class="close" title="Close Modal">&times;</span>
+
+        <!-- Modal Content -->
+        <div class="modal-content animate container">
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for application..">
+
+            <ul id="myUL">
+                {% for row in result %}
+                    <li><a href="result?package={{ row.packagename }}"> {{ row.packagename }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+
+    <!-- The Modal -->
+    <div id="id02" class="modal">
+  <span onclick="document.getElementById('id02').style.display='none'"
+        class="close" title="Close Modal">&times;</span>
+
+        <!-- Modal Content -->
+        <div class="modal-content animate container">
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for application..">
+
+            <ul id="myUL">
+                {% for row in result %}
+                    <li><a href="result?package={{ row.packagename }}"> {{ row.packagename }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    function myFunction() {
+        // Declare variables
+        var input, filter, ul, li, a, i;
+        input = document.getElementById('myInput');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("myUL");
+        li = ul.getElementsByTagName('li');
+
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("a")[0];
+            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+</script>
+<script>
+    // Get the modal
+    const modal1 = document.getElementById('id01');
+    const modal2 = document.getElementById('id02');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target === modal1 || event.target === modal2) {
+            modal1.style.display = "none";
+            modal2.style.display = "none";
+        }
+    }
+</script>
 </body>
 </html>
