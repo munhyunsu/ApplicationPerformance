@@ -1,45 +1,23 @@
 from django.http import HttpResponse
 from django.template import loader
+from django.shortcuts import render
+
+from speed.models import AppInformation, SpeedInformation
 
 import csv
 from operator import itemgetter
 
 
 def index(request):
-    template = loader.get_template('index.html')
-    data_list = list()
-    with open('data.csv', 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            row['si'] = int(float(row['si']))
-            data_list.append(row)
-    data_list.sort(key=itemgetter('si'))
-    return HttpResponse(template.render({'result': data_list}))
+    if request.method == 'GET':
+        apps = AppInformation.objects.all().order_by('app_title')
+        return render(request, 'index.html', {'apps': apps})
 
 
 def result(request):
-    template = loader.get_template('result.html')
-    package = request.GET.get('package')
-
-    data_list = list()
-    with open('data.csv', 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            for header in ['si', 'tcp', 'http', 'https', 'rexmit', 'layout', 'lastlayout', 'ads', 'image']:
-                row[header] = int(float(row[header]))
-            for header in ['rtt', 'idletime', 'xmittime']:
-                row[header] = float(row[header])
-            data_list.append(row)
-            if package == row['packagename']:
-                target = row
-    target_dict = dict()
-    for header in ['si', 'rtt', 'idletime', 'xmittime', 'tcp', 'http', 'https', 'rexmit', 'layout', 'lastlayout', 'ads', 'image']:
-        data_list.sort(key=itemgetter(header))
-        target_dict[header] = float((data_list.index(target)+1)/len(data_list))
-
-    return HttpResponse(template.render({'package': package, 'result': target, 'rank': target_dict}))
-
-
-def advice(request):
-    template = loader.get_template('mysite/templates/advice.html')
-    return HttpResponse(template.render())
+    if request.method == 'GET':
+        package_name = request.GET.get('package')
+        app_title = AppInformation.objects.get(package_name=package_name).app_title
+        exps = SpeedInformation.objects.filter(package_name=package_name).order_by('-exp_date', 'scene_num')
+        return render(request, 'result.html', {'app_title': app_title,
+                                               'exps': exps})

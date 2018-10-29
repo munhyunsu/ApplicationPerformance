@@ -1,0 +1,30 @@
+body {
+    font-family: sans-serif, NanumGothic;
+    background-color: #ffe7ef;
+}
+
+table {
+    font-family: sans-serif, arial;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th{
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #e1cbd3;
+}
+
+tr:hover {background-color: #ddd;}
+
+th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #8499af;
+    color: white;
+}

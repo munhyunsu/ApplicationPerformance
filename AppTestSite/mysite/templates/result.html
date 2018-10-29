@@ -2,43 +2,41 @@
 <html lang="en">
 <head>
     {% load static %}
-    <link rel="stylesheet", type="text/css", href="{% static "css/index.css" %}">
+    <link rel="stylesheet" , type="text/css" , href="{% static "css/result.css" %}">
     <meta charset="UTF-8">
     <title>Result page</title>
 </head>
 <body>
-    <h1> {{ package }} result page </h1>
+<h1> {{ app_title }} result page </h1>
+{% for exp in exps %}
+    <h3> Experiments date: {{ exp.exp_date }}, Scene: {{ exp.scene_num }}</h3>
     <table>
         <tr>
-            <th>Package Name</th>
             <th>Speed Index</th>
             <th>TCP connections</th>
-            <th>RTT</th>
-            <th>Retransmission</th>
+            <th>RTT(Max)</th>
+            <th>RTT(Avg)</th>
+            <th>Rexmit per min</th>
+            <th>Traffic Volume</th>
             <th>Layouts</th>
             <th>Images</th>
             <th>Ads</th>
+            <th>Servers</th>
         </tr>
         <tr>
-            <td>{{result.packagename}}</td>
-            <td>{{result.si}}</td>
-            <td>{{result.tcp}}</td>
-            <td>{{result.rtt}}</td>
-            <td>{{result.rexmit}}</td>
-            <td>{{result.layout}}</td>
-            <td>{{result.image}}</td>
-            <td>{{result.ads}}</td>
-        </tr>
-        <tr>
-            <td><div align="right"><b>Top: </b></div></td>
-            <td>{{rank.si|floatformat:-2}}</td>
-            <td>{{rank.tcp|floatformat:-2}}</td>
-            <td>{{rank.rtt|floatformat:-2}}</td>
-            <td>{{rank.rexmit|floatformat:-2}}</td>
-            <td>{{rank.layout|floatformat:-2}}</td>
-            <td>{{rank.image|floatformat:-2}}</td>
-            <td>{{rank.ads|floatformat:-2}}</td>
+            <td>{{ exp.speed_index }}</td>
+            <td>{{ exp.tcp_num }}</td>
+            <td>{{ exp.rtt_max }}</td>
+            <td>{{ exp.rtt_avg }}</td>
+            <td>{{ exp.ret_pm }}</td>
+            <td>{{ exp.tra_vol }}</td>
+            <td>{{ exp.layout_num }}</td>
+            <td>{{ exp.image_num }}</td>
+            <td>{{ exp.ads_num }}</td>
+            <td>{{ exp.servers }}</td>
         </tr>
     </table>
+    <img src="{% static "img/snapshot.jpg" %}" width="80%">
+{% endfor %}
 </body>
 </html>

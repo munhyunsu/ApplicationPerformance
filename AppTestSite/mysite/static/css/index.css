@@ -1,11 +1,13 @@
 /* Bordered form */
-.header {
-    background-color: white;
-}
+/*.header {*/
+    /*background-color: white;*/
+/*}*/
 
-.row {
+body {
     background: linear-gradient(to top, lightpink 0%, white 100%); /* W3C */
 }
+
+
 
 form {
     border: 3px solid #f1f1f1;
