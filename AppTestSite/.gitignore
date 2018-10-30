@@ -1,6 +1,7 @@
 apptestsite/
 db.sqlite3
 manage.py
+**/static/
 
 # venv
 venv/
