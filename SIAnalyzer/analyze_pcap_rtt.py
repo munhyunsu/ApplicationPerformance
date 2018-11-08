@@ -137,12 +137,24 @@ def get_ttfb_avg(string):
         return 0
 
 
+def get_keep_rate(string):
+    try:
+        target_list = re.findall('complete conn: \w*', string)
+        keep_cnt = 0
+        for conn in target_list:
+            if conn == 'complete conn: no':
+                keep_cnt = keep_cnt + 1
+        return keep_cnt/len(target_list)
+    except:
+        return -1
+
 
 def main(argv):
     path = argv[1]
 
     print('package', 'rtt', 'idletime', 'xmittime', 'tcp', 
-          'http', 'https', 'retrans', 'trafficvolume', 'ttfb', sep = ',')
+          'http', 'https', 'retrans', 'trafficvolume', 'ttfb', 
+          'keep', sep = ',')
     for path in get_files(path, '.pcap'):
         string = get_subprocess_stdout(path)
 
@@ -156,9 +168,12 @@ def main(argv):
         retrans = get_retrans_sum(string)
         trafficvolume = get_trafficvolume_sum(string)
         ttfb = get_ttfb_avg(string)
+        keep = get_keep_rate(string)
+
         if rtt > 0:
             print(package, rtt, idletime, xmittime, tcp,
-                  http, https, retrans, trafficvolume, ttfb, sep = ',')
+                  http, https, retrans, trafficvolume, ttfb, 
+                  keep, sep = ',')
 
         subprocess.run('rm ./tmp/*', shell = True)
 
