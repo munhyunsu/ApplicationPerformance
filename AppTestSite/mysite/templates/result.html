@@ -12,6 +12,24 @@
     <h3> Experiments date: {{ exp.exp_date }}, Scene: {{ exp.scene_num }}</h3>
     <table>
         <tr>
+            <th>First Time to Byte</th>
+            <th>Keep Alive Enabled</th>
+            <th>Cache Static Content</th>
+            <th>Effective use of CDN</th>
+            <th>One Rendering per Pixel</th>
+            <th>Meaningful layout</th>
+        </tr>
+        <tr>
+            <td><b>{{ exp.sc_fttb }}</b></td>
+            <td><b>{{ exp.sc_keep }}</b></td>
+            <td><b>{{ exp.sc_cache }}</b></td>
+            <td><b>{{ exp.sc_cdn }}</b></td>
+            <td><b>{{ exp.sc_render }}</b></td>
+            <td><b>{{ exp.sc_layout }}</b></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
             <th>Speed Index</th>
             <th>TCP connections</th>
             <th>RTT(Max)</th>

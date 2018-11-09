@@ -24,7 +24,13 @@ class SpeedInformation(models.Model):
     image_num = models.IntegerField('image number')
     ads_num = models.IntegerField('ads number')
     tra_vol = models.FloatField('traffic volume')
-    servers = models.TextField('Server list')
+    servers = models.TextField('server list')
+    sc_fttb = models.CharField('score about FTTB', max_length=1)
+    sc_keep = models.CharField('score about keep-alive', max_length=1)
+    sc_cache = models.CharField('score about cache', max_length=1)
+    sc_cdn = models.CharField('score about cdn', max_length=1)
+    sc_render = models.CharField('score about render', max_length=1)
+    sc_layout = models.CharField('score about layouts', max_length=1)
 
     def __str__(self):
         return '{0} - {1} by {2}'.format(self.package_name, self.scene_num, self.exp_date)
