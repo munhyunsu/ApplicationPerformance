@@ -1,14 +1,8 @@
 ## Description
+- a view for checking application performance results
 
 ## Usage
+- Initialize django project
+  - migrate database
 
 
-## Frame
-- index.html: split column
-- result.html: speedindex, time slice, re-launch
-
-## Database schema
-
-
-
-#
