@@ -162,6 +162,9 @@ def get_keep_rate(string):
         return -1
 
 
+
+
+### Need to change dict and dict to csv
 def main(argv):
     path = argv[1]
 
