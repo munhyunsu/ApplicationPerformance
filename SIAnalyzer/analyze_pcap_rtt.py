@@ -45,6 +45,16 @@ def get_rttavg_avg(string):
     except:
         return -1
 
+def get_rttmax_avg(string):
+    try:
+        mean = statistics.mean(
+                    map(float, 
+                    re.findall('RTT max:(?:\s)+(\d+.\d+) ms', string)))
+        return mean
+    except:
+        return -1
+
+
 
 def get_idletime_avg(string):
     try:
@@ -130,7 +140,10 @@ def get_ttfb_avg(string):
                                 stderr = subprocess.DEVNULL,
                                 universal_newlines = True)
             for line in cp.stdout.splitlines():
-                result.append(int(line.split(' ')[1]))
+                ttfb = int(line.split(' ')[1])
+                if ttfb == 0:
+                    continue
+                result.append(ttfb)
         mean = statistics.mean(result)
         return mean
     except:
@@ -152,7 +165,8 @@ def get_keep_rate(string):
 def main(argv):
     path = argv[1]
 
-    print('package', 'rtt', 'idletime', 'xmittime', 'tcp', 
+    subprocess.run('rm ./tmp/*', shell = True)
+    print('package', 'rtt', 'rttm', 'idletime', 'xmittime', 'tcp', 
           'http', 'https', 'retrans', 'trafficvolume', 'ttfb', 
           'keep', sep = ',')
     for path in get_files(path, '.pcap'):
@@ -160,6 +174,7 @@ def main(argv):
 
         package = (path.split('/')[-1])[:-5]
         rtt = get_rttavg_avg(string)
+        rttm = get_rttmax_avg(string)
         idletime = get_idletime_avg(string)
         xmittime = get_dataxmittime_avg(string)
         tcp = get_tcp_len(string)
@@ -171,7 +186,7 @@ def main(argv):
         keep = get_keep_rate(string)
 
         if rtt > 0:
-            print(package, rtt, idletime, xmittime, tcp,
+            print(package, rtt, rttm, idletime, xmittime, tcp,
                   http, https, retrans, trafficvolume, ttfb, 
                   keep, sep = ',')
 
