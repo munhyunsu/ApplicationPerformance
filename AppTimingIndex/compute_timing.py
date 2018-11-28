@@ -1,5 +1,9 @@
 import csv
 import copy
+import subprocess
+
+from pcap_processor import export_pcap_timing
+
 
 HOST = '192.168.86.122'
 FLOWS = dict()
@@ -107,21 +111,22 @@ def export_csv():
 
 
 def main():
-    with open('amazon.csv', 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            key = get_key(row)
-            protocol = row['Protocol']
-            if protocol == 'DNS':
-                update_dns(row)
-            elif protocol in ['TCP', 'TLSv1.0', 'TLSv1.1', 'TLSv1.2']:
-                update_tcp(row)
-
-    print(DNS)
-    print(FLOWS)
-
-    get_rdns()
-    export_csv()
+    # with open('amazon.csv', 'r') as f:
+    #     reader = csv.DictReader(f)
+    #     for row in reader:
+    #         key = get_key(row)
+    #         protocol = row['Protocol']
+    #         if protocol == 'DNS':
+    #             update_dns(row)
+    #         elif protocol in ['TCP', 'TLSv1.0', 'TLSv1.1', 'TLSv1.2']:
+    #             update_tcp(row)
+    #
+    # print(DNS)
+    # print(FLOWS)
+    #
+    # get_rdns()
+    # export_csv()
+    export_pcap_timing('amazon.pcap', 'amazon_timing.csv')
 
 
 if __name__ == '__main__':
