@@ -22,11 +22,10 @@ def export_pcap_timing(pcap_path, csv_path):
         draw = dict()
         draw['key'] = key
         for timing in TIMING_ORDER:
-            draw[timing] = item.get(timing, 0.0)
+            draw[timing] = item.get(timing, str(0.0))
         result.append(draw)
-        print(item, draw)
 
-    result.sort(key=itemgetter('key'))
+    result.sort(key=itemgetter('domainLookupStart', 'key'), reverse=True)
 
     with open(csv_path, 'w') as f:
         fieldnames = ['key'] + TIMING_ORDER
