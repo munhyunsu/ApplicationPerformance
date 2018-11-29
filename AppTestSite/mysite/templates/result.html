@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     {% load static %}
-    <link rel="stylesheet" , type="text/css" , href="{% static "css/result.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "css/result.css" %}">
     <meta charset="UTF-8">
     <title>Result page</title>
 </head>
@@ -12,12 +12,38 @@
     <h3> Experiments date: {{ exp.exp_date }}, Scene: {{ exp.scene_num }}</h3>
     <table>
         <tr>
+            <th>App Speed Score</th>
+        </tr>
+        <tr>
+            <td><b>1</b></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <th>Speed Index</th>
+            <th>DNS</th>
+            <th>Connection</th>
+            <th>Secure Connection</th>
+            <th>Request</th>
+            <th>Response</th>
+        </tr>
+        <tr>
+            <td><b>{{ exp.speed_index }}</b></td>
+            <td><b>{{ exp.rate_dns }}</b></td>
+            <td><b>{{ exp.rate_connect }}</b></td>
+            <td><b>{{ exp.rate_secure }}</b></td>
+            <td><b>{{ exp.rate_request }}</b></td>
+            <td><b>{{ exp.rate_response }}</b></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
             <th>First Time to Byte</th>
             <th>Keep Alive Enabled</th>
             <th>Cache Static Content</th>
             <th>Effective use of CDN</th>
-            <th>One Rendering per Pixel</th>
-            <th>Meaningful layout</th>
+            <th>Rendering layers</th>
+            <th>Layout depth</th>
         </tr>
         <tr>
             <td><b>{{ exp.sc_fttb }}</b></td>
@@ -54,7 +80,7 @@
             <td>{{ exp.servers }}</td>
         </tr>
     </table>
-    <img src="{% static "img/snapshot.jpg" %}" width="80%">
+    <img src="{% static "img/com.amazon.mShop.android.shopping-20181104-1.png" %}" width="80%">
 {% endfor %}
 </body>
 </html>

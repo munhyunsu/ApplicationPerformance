@@ -21,3 +21,11 @@ def result(request):
         exps = SpeedInformation.objects.filter(package_name=package_name).order_by('-exp_date', 'scene_num')
         return render(request, 'result.html', {'app_title': app_title,
                                                'exps': exps})
+
+
+def new(request):
+    if request.method == 'GET':
+        pkgname = None
+    elif request.method == 'POST':
+        pkgname = request.POST.get('pkgname')
+    return render(request, 'new.html', {'pkgname': pkgname})

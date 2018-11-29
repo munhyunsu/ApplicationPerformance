@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/new.css" %}">
+    <meta charset="UTF-8">
+    <title>Mobile App Speed Achive</title>
+</head>
+<body>
+    <form method="post" action="">
+    {% csrf_token %}
+    {% if pkgname is None %}
+    <div class="question">
+        <label for="pkgname"><b>Package name:</b></label>
+        <input type="text" name="pkgname" required>
+        <button type="submit">Start measurement</button>
+    </div>
+    </form>
+    {% else %}
+    <h1>{{ pkgname }} Measuring ...</h1>
+    <h2>After 5 minutes, go to <a href="/result/?package=com.amazon.mShop.android.shopping">result page</a>.</h2>
+    {% endif %}
+
+</body>
+</html>

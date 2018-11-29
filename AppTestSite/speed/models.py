@@ -31,6 +31,11 @@ class SpeedInformation(models.Model):
     sc_cdn = models.CharField('score about cdn', max_length=1)
     sc_render = models.CharField('score about render', max_length=1)
     sc_layout = models.CharField('score about layouts', max_length=1)
+    rate_dns = models.FloatField('dns ratio of SI')
+    rate_connect = models.FloatField('connect ratio of SI')
+    rate_secure = models.FloatField('secure ratio of SI')
+    rate_request = models.FloatField('request ratio of SI')
+    rate_response = models.FloatField('response ratio of SI')
 
     def __str__(self):
         return '{0} - {1} by {2}'.format(self.package_name, self.scene_num, self.exp_date)

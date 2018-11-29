@@ -89,6 +89,7 @@
             <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for application..">
 
             <ul id="myUL">
+                <li><b><a href="new">Request New Experiments</a></b></li>
                 {% for app in apps %}
                     <li><a href="result?package={{ app.package_name }}"> {{ app.app_title }}</a></li>
                 {% endfor %}
