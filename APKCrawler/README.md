@@ -1,10 +1,11 @@
 # APKCrawler
-APK Crawler collects the APK files the exist in the Google Play store.
-APK Crawler creates sqlite DB that contains meta data about top 300 apps by category.
-APK Crawler downloads APK files at APKpure.com using collected meta data.
+- APK Crawler collects the APK files the exist in the Google Play store.
+- APK Crawler creates sqlite DB that contains meta data about top 300 apps by category.
+- APK Crawler downloads APK files at APKpure.com using collected meta data.
 
 ## TODO
 - global apk parser
+- 
 
 # Architecture
 ![Architecture](FlowChart.png)
