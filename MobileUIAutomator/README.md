@@ -1,6 +1,7 @@
 # TODO
 - Android Virtual Device!
 - Detect rendering completion
+- Monitor CPU load
 
 # Experiments Step
 1. Search target apk files(or parse target app list)
@@ -9,4 +10,3 @@
 4. After execution send any UDP packet for marking
 5. If the app complete rendering then generate user input to device
 6. reqeat 4-5 until 5 input is inserted
-
