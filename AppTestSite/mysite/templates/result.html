@@ -15,12 +15,26 @@
             <th>App Speed Score</th>
         </tr>
         <tr>
-            <td><b>1</b></td>
+            <td><b>17.58</b> (1*4+21*2+95*1+14*5)/12</td>
         </tr>
     </table>
     <table>
         <tr>
             <th>Speed Index</th>
+            <th>CPU load</th>
+            <th>First paint</th>
+            <th>Time to interactive</th>
+        </tr>
+        <tr>
+            <td><b>{{ exp.speed_index }}</b></td>
+            <td><b>{{ exp.cpu_load }}</b></td>
+            <td><b>{{ exp.first_paint }}</b></td>
+            <td><b>{{ exp.first_interactive }}</b></td>
+        </tr>
+    </table>
+    <img src="{% static "img/com.amazon.mShop.android.shopping-20181104-1.png" %}" width="80%">
+    <table>
+        <tr>
             <th>DNS</th>
             <th>Connection</th>
             <th>Secure Connection</th>
@@ -28,7 +42,6 @@
             <th>Response</th>
         </tr>
         <tr>
-            <td><b>{{ exp.speed_index }}</b></td>
             <td><b>{{ exp.rate_dns }}</b></td>
             <td><b>{{ exp.rate_connect }}</b></td>
             <td><b>{{ exp.rate_secure }}</b></td>
@@ -56,7 +69,6 @@
     </table>
     <table>
         <tr>
-            <th>Speed Index</th>
             <th>TCP connections</th>
             <th>RTT(Max)</th>
             <th>RTT(Avg)</th>
@@ -68,7 +80,6 @@
             <th>Servers</th>
         </tr>
         <tr>
-            <td>{{ exp.speed_index }}</td>
             <td>{{ exp.tcp_num }}</td>
             <td>{{ exp.rtt_max }}</td>
             <td>{{ exp.rtt_avg }}</td>
@@ -80,7 +91,6 @@
             <td>{{ exp.servers }}</td>
         </tr>
     </table>
-    <img src="{% static "img/com.amazon.mShop.android.shopping-20181104-1.png" %}" width="80%">
 {% endfor %}
 </body>
 </html>

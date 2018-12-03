@@ -15,7 +15,7 @@ class SpeedInformation(models.Model):
     package_name = models.CharField('package name', max_length=50)
     exp_date = models.DateField('experimented date')
     scene_num = models.IntegerField('scene number')
-    speed_index = models.IntegerField('speed index')
+    speed_index = models.FloatField('speed index')
     tcp_num = models.IntegerField('tcp connections')
     rtt_max = models.FloatField('max rtt')
     rtt_avg = models.FloatField('avg rtt')
@@ -36,6 +36,9 @@ class SpeedInformation(models.Model):
     rate_secure = models.FloatField('secure ratio of SI')
     rate_request = models.FloatField('request ratio of SI')
     rate_response = models.FloatField('response ratio of SI')
+    cpu_load = models.IntegerField('CPU load time')
+    first_paint = models.IntegerField('first paint')
+    first_interactive = models.FloatField('interactive')
 
     def __str__(self):
         return '{0} - {1} by {2}'.format(self.package_name, self.scene_num, self.exp_date)
