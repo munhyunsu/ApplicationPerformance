@@ -2,6 +2,9 @@
 - Android Virtual Device!
 - Detect rendering completion
 - Monitor CPU load
+  - using top
+
+
 
 # Experiments Step
 1. Search target apk files(or parse target app list)
