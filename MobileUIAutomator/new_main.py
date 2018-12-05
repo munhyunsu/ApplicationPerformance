@@ -7,6 +7,7 @@ import datetime
 import xml.etree.ElementTree as ET
 import random
 import re
+import time
 
 
 def setup_android(path):
@@ -61,6 +62,10 @@ def command_check(command):
 
 def command_output(command):
     return subprocess.check_output(command, shell=True).decode('utf-8')
+
+
+def write_relative_timing(start_time):
+    
 
 
 def send_ping():
@@ -168,7 +173,11 @@ def main(argv=sys.argv):
         os.makedirs('./output/xml/{0}'.format(package_name),
                     exist_ok=True)
 
+        # time_list
+        timing_list = list()
+
         # execute tcpdump
+        timing_list.append((time.time(), 'execute tcpdump'))
         command = 'adb shell su -c tcpdump -i wlan0 -w /sdcard/{0}.pcap'.format(package_name)
         tcpdump_proc = command_popen(command)
 
