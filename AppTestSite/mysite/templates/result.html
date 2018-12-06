@@ -21,15 +21,17 @@
     <table>
         <tr>
             <th>Speed Index</th>
-            <th>CPU load</th>
             <th>First paint</th>
-            <th>Time to interactive</th>
+            <th>Layout load complete</th>
+            <th>Time after downloads</th>
+            <th>CPU load</th>
         </tr>
         <tr>
             <td><b>{{ exp.speed_index }}</b></td>
-            <td><b>{{ exp.cpu_load }}</b></td>
             <td><b>{{ exp.first_paint }}</b></td>
             <td><b>{{ exp.first_interactive }}</b></td>
+            <td><b> 2.36 </b></td>
+            <td><b>{{ exp.cpu_load }}</b></td>
         </tr>
     </table>
     <img src="{% static "img/com.amazon.mShop.android.shopping-20181104-1.png" %}" width="80%">
