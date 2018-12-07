@@ -4,6 +4,9 @@
 - Mobile UI Automate controller
   - Record screen
   - Capture traffic
+  - with/without rooting
+    - rooted phone: tcpdump itself
+    - unrooted phone: OpenWRT
 - SpeedIndex calculator
   - Init/Run-time index
 
