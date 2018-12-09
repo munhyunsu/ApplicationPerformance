@@ -110,6 +110,9 @@ def parse_xml_log(path):
     return size, point
 
 
+## adb shell -c top | grep {0}
+
+
 def main(argv=sys.argv):
     if len(argv) < 1:
         print('Can not reached line')
