@@ -178,7 +178,8 @@ def main(argv=sys.argv):
 
         # execute tcpdump
         timing_list.append((time.time(), 'execute tcpdump'))
-        command = 'adb shell su -c tcpdump -i wlan0 -w /sdcard/{0}.pcap'.format(package_name)
+        #command = 'adb shell su -c tcpdump -i wlan0 -w /sdcard/{0}.pcap'.format(package_name)
+        command = 'ssh root@192.168.1.1 "tcpdump -i br-lan -s 0 -U -w - \(not port 22\) " > ./output/pcap/{0}'.format(package_name)
         tcpdump_proc = command_popen(command)
 
         # execute screenrecord
