@@ -130,10 +130,10 @@ def main(argv=sys.argv):
     setup_android('/sdcard/tcpdump')
 
     # Get list of target apps
-    if not os.path.exists('app_list.csv'):
+    if not os.path.exists('app_list_a5.csv'):
         raise Exception('Need app_list.csv')
     app_list = list()
-    with open('app_list.csv', 'r') as f:
+    with open('app_list_a5.csv', 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
             print(row['package_name'])
@@ -190,13 +190,11 @@ def main(argv=sys.argv):
 
         # launch app
         start_time = datetime.datetime.now()
-        # ping_proc = send_ping()
         command = 'adb shell monkey -p {0} -c android.intent.category.LAUNCHER 1'.format(package_name)
         command_check(command)
-        # terminate_ping(ping_proc)
 
         # insert event
-        for index in range(0, 1):
+        for index in range(0, 5):
             size_list = list()
             # wait for rendering
             while True:
@@ -234,18 +232,14 @@ def main(argv=sys.argv):
                 command = 'adb shell input tap {0} {1}'.format(point[0], point[1])
             else:
                 command = 'adb shell input keyevent KEYCODE_BACK'
-            # ping_proc = send_ping()
             command_check(command)
-            # terminate_ping(ping_proc)
 
         # stop app
-        # ping_proc = send_ping()
-        for index in range(0, 5):
+        for index in range(0, 1):
             command = 'adb shell input keyevent KEYCODE_BACK'
             command_check(command)
         command = 'adb shell am force-stop {0}'.format(package_name)
         command_check(command)
-        # terminate_ping(ping_proc)
 
         # terminate tcpdump
         tcpdump_proc.terminate()
@@ -273,6 +267,3 @@ def main(argv=sys.argv):
 
 if __name__ == '__main__':
     main()
-
-# ERROR
-# adb: failed to install Gmail_v8.8.26.211559306.release_apkpure.com.apk: Failure [INSTALL_FAILED_ALREADY_EXISTS: Attempt to re-install com.google.android.gm without first uninstalling.]
