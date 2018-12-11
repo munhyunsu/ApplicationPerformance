@@ -120,7 +120,8 @@ def main(argv=sys.argv):
     # Check dirs
     dirs = ['./output/xml',
             './output/pcap',
-            './output/mp4']
+            './output/mp4',
+            './output/top']
     check_dirs(dirs)
     # Clear env
     print('checked all binaries, dirs')
@@ -172,6 +173,8 @@ def main(argv=sys.argv):
         # create XML dir
         os.makedirs('./output/xml/{0}'.format(package_name),
                     exist_ok=True)
+        os.makedirs('./output/top/{0}'.format(package_name),
+                    exist_ok=True)
 
         # time_list
         timing_list = list()
@@ -203,6 +206,11 @@ def main(argv=sys.argv):
                     break
                 print('size_list', size_list)
                 # export XML log
+                dump_time = get_second_from_start(start_time)
+                if dump_time >= (index+1)*60:
+                    break
+                command = 'adb shell \'top -n 1 | grep {0}\' > ./output/top/{0}/{1}.txt'.format(package_name, dump_time)
+                command_check(command)
                 dump_time = get_second_from_start(start_time)
                 command = 'adb shell uiautomator dump /sdcard/{0}.xml'.format(dump_time)
                 dump_output = command_output(command)
@@ -241,11 +249,11 @@ def main(argv=sys.argv):
 
         # terminate tcpdump
         tcpdump_proc.terminate()
-        # tcpdump_proc.kill()
+        tcpdump_proc.kill()
 
         # terminate screenrecord
         screenrecord_proc.terminate()
-        # screenrecord_proc.kill()
+        screenrecord_proc.kill()
 
         # why?
         pss = ['tcpdump',
