@@ -2,6 +2,7 @@ from PIL import Image, ImageChops
 from skimage import io
 from skimage.measure import compare_ssim as ssim
 
+import csv
 import os
 import subprocess
 from math import sqrt
@@ -12,10 +13,12 @@ import logging.config
 import xml.etree.ElementTree as ET
 from operator import itemgetter
 
-XMLDIR = '/home/harny/Github/ApplicationPerformance/MobileUIAutomator/a5-wlan/xml/'
-MP4DIR = '/home/harny/Github/ApplicationPerformance/MobileUIAutomator/a5-wlan/mp4/'
+XMLDIR = '/home/harny/Github/ApplicationPerformance/MobileUIAutomator/181211-s9-wlan-init/xml/'
+MP4DIR = '/home/harny/Github/ApplicationPerformance/MobileUIAutomator/181211-s9-wlan-init/mp4/'
 TEMPDIR = './temp/'
 OUTPUTDIR = './output/'
+
+FPS = 1
 
 
 def color_based(image1, image2):
@@ -44,54 +47,39 @@ def color_based(image1, image2):
     return average_similarity
 
 
-def get_split_point(input_list, cut_point):
-
+def get_split_point(files_list, cut_point):
     list_split_point = list()
     for index in range(0, len(cut_point)):
         from_index = 0
         if index > 0:
-            from_index = cut_point[index-1]*10
-        to_index = cut_point[index]*10
+            from_index = cut_point[index-1]*FPS ## 10
+        to_index = cut_point[index]*FPS ## 10
 
         for index in range(to_index, from_index, -1):
-            if input_list[index][2] >= 0.8:
-                continue
-            else:
+            if index-1 == from_index:
+                list_split_point.append((from_index, index))
+                break
+            image1 = io.imread(files_list[index])
+            image2 = io.imread(files_list[index-1])
+            similarity = ssim(image1, image2, multichannel=True)
+            if similarity < 0.9:
                 list_split_point.append((from_index, index))
                 break
     return list_split_point
 
 
-def get_speed_index_of_first_activity(list_similarity):
-    # 리스트를 역순으로 뒤집어 액티비티 로딩 완료 후 움직이지 않는 스크린샷 제거
-    list_similarity.reverse()
-    last_shot_index = 0
-    for index in range(len(list_similarity)):
-        if list_similarity[index][2] >= 0.90:
-            last_shot_index = index
-        else:
-            print(last_shot_index)
-            last_shot_index = len(list_similarity) - last_shot_index -1
-            break
-    print('last_shot_index : ' + str(last_shot_index))
-    # 다시 원래대로 뒤집어서 로딩완료직후까지의 speed index 구하기
-    list_similarity.reverse()
-    speed_index = 0
-    speed_index_list = []
-    for index in range(last_shot_index+1):
-        speed_index_list.append(list_similarity[index][1].split('.jpg')[0][-3:])
-        speed_index += (1 - list_similarity[index][2])
-
-    return [[speed_index_list, speed_index]]
-
-
-def get_speed_index(list_similarity, list_split_point):
+def get_speed_index(files_list, list_split_point):
     speed_index = list()
     for from_index, to_index in list_split_point:
         speed = 0
-        for sim in list_similarity[from_index:to_index]:
-            speed = speed + sim
-        speed_index.append(speed)
+        sim_list = list()
+        for snaps in files_list[from_index:to_index]:
+            image1 = io.imread(snaps)
+            image2 = io.imread(files_list[to_index])
+            similarity = (1-ssim(image1, image2, multichannel=True))*(1000/FPS)
+            sim_list.append(similarity)
+            speed = speed + similarity
+        speed_index.append((speed, sim_list))
     return speed_index
 
 
@@ -110,7 +98,8 @@ def run_ffmpeg(video_name):
 
     # ffmpeg 실행
     # LuHa: fps=2 로 변경
-    command = 'ffmpeg -i ' + MP4DIR+str(video_name) + '.mp4 -vf fps=10 ' + TEMPDIR+str(video_name) + '/out%04d.jpg'
+    # command = 'ffmpeg -i ' + MP4DIR + str(video_name) + '.mp4 -vf fps=10 ' + TEMPDIR + str(video_name) + '/out%04d.jpg'
+    command = 'ffmpeg -i ' + MP4DIR + str(video_name) + '.mp4 -vf fps={0} '.format(FPS) + TEMPDIR + str(video_name) + '/out%04d.jpg'
     try:
         ffmpeg = subprocess.check_call(command, stdout=subprocess.PIPE, shell=True)
     except Exception as e:
@@ -153,38 +142,11 @@ def get_similarity_list(files_list):
     return list_similarity
 
 
-def get_similarity_list_last(files_list):
-    files_list = files_list[:5]
-    list_similarity = []
-
-    for index in range(len(files_list)):
-        try:
-            image1 = io.imread(files_list[index])
-            image2 = io.imread(files_list[-1])
-        except OSError as e:
-            continue
-        except IndexError as e:
-            continue
-        similarity = ssim(image1, image2, multichannel = True)
-        list_similarity.append([files_list[index], files_list[-1], similarity])
-
-    return list_similarity
-
-
-def write2csv(app_name, speed_list):
-    if len(speed_list) == 0:
-        logging.info(app_name + ' len(speed_list) is 0')
-        return
-    csv = open(OUTPUTDIR+'speed_result.csv','a')
-
-    for speed_row in speed_list:
-        speed_index = speed_row[1]
-        start_time = speed_row[0][0]
-        end_time = speed_row[0][len(speed_row[0])-1]
-        csv.write(app_name + ',' + str(start_time) + ',' + str(end_time) + ',' + str(speed_index) +'\n')
-        logging.info(app_name + ',' + str(start_time) + ',' + str(end_time) + ',' + str(speed_index) +'\n')
-
-    csv.close()
+def write2csv(video_name, list_split_point, speed_list):
+    with open(OUTPUTDIR+'speedindex.csv', 'a') as f:
+        writer = csv.writer(f, quoting=csv.QUOTE_ALL)
+        for index in range(0, len(speed_list)):
+            writer.writerow([video_name, list_split_point[index], speed_list[index][0], speed_list[index][1]])
 
 
 def parse_xml_log(path):
@@ -258,10 +220,12 @@ def main():
         files_list = list_jpg(TEMPDIR+video_name+'/')
         files_list.sort()
 
-        list_similarity = get_similarity_list(files_list)
-        list_split_point = get_split_point(list_similarity, cut_point[video_name.split('.')[0]])
-        speed_list = get_speed_index(list_similarity, list_split_point)
-        print(video_name, list_split_point, speed_list)
+        # print(cut_point[video_name])
+        list_split_point = get_split_point(files_list, cut_point[video_name])
+        # print(list_split_point)
+        speed_list = get_speed_index(files_list, list_split_point)
+        # print(speed_list)
+        write2csv(video_name, list_split_point, speed_list)
 
 
 if __name__ == '__main__':
