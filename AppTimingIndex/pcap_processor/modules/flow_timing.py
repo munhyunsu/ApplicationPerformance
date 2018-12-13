@@ -52,6 +52,7 @@ class FlowTiming(object):
         src_port = row['udp.srcport']
         dst_port = row['udp.dstport']
         qry_name = row['dns.qry.name']
+        udp_key = self._get_udp_key(row)
         if src_port != '53' and dst_port != '53':
             return
         if qry_name not in self.dns.keys():
@@ -62,6 +63,22 @@ class FlowTiming(object):
             aname = row['dns.a']
             self.dns[qry_name]['domainLookupEnd'] = time_relative
             self.dns[qry_name]['aname'] = aname.split(',')
+        if src_port == '443' or dst_port == '443':
+            item = self.flow.get(udp_key, dict())
+            if 'quicConnectStart' not in item.keys():
+                item['quickConnectStart'] = time_relative
+            item['quicConnectEnd'] = time_relative
+            self.flow[udp_key] = item
+
+    def _get_udp_key(self, row):
+        src_ip = row['ip.src']
+        src_port = row['udp.srcport']
+        dst_ip = row['ip.dst']
+        dst_port = row['udp.dstport']
+        if src_ip != self.host_ip:
+            return '{0}:{1}-{2}'.format(src_ip, src_port, dst_port)
+        else:
+            return '{0}:{1}-{2}'.format(dst_ip, dst_port, src_port)
 
     def _update_tcp(self, row):
         time_relative = row['frame.time_relative']
@@ -70,7 +87,7 @@ class FlowTiming(object):
         syn = row['tcp.flags.syn']
         ack = row['tcp.flags.ack']
         fin = row['tcp.flags.fin']
-        cipher = row['ssl.change_cipher_spec']
+        ssl = row['ssl.handshake']
         tcp_key = self._get_tcp_key(row)
         item = self.flow.get(tcp_key, dict())
 
@@ -78,11 +95,8 @@ class FlowTiming(object):
             item['connectStart'] = time_relative
         if fin == '1':
             item['connectEnd'] = time_relative
-        if cipher == '1':
-            if 'halfSecureConnectionStart' not in item.keys():
-                item['halfSecureConnectionStart'] = time_relative
-            else:
-                item['secureConnectionStart'] = item['halfSecureConnectionStart']
+        if ssl == '1':
+            item['secureConnectionStart'] = time_relative
 
         if (tcp_key.split(':')[1]).split('-')[0] == '80':
             if 'connectStart' in item.keys():
