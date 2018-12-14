@@ -33,5 +33,8 @@ def parse_xml_log(path):
 def parse_top_log(path):
     with open(path, 'r') as f:
         data = f.read()
-        top = max(map(int, re.findall('(\d+)%', data)))
+        try:
+            top = max(map(int, re.findall('(\d+)%', data)))
+        except ValueError:
+            top = 0
         return top
