@@ -194,7 +194,7 @@ def main(argv=sys.argv):
         command_check(command)
 
         # insert event
-        for index in range(0, 5):
+        for index in range(0, 11):
             size_list = list()
             # wait for rendering
             while True:
