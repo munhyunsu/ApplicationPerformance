@@ -177,7 +177,7 @@ def main(argv):
     pack_max = dict()
     pack_result = dict()
 
-    print('layouts','lastlayout','ads','img', sep=',')
+    print('package', 'layouts','lastlayout','ads','img', sep=',')
     for path in get_files(path, '.xml', recursive = True):
         package = path.split('/')[-2]
         number = int((path.split('/')[-1])[:-4])
