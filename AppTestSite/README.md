@@ -1,8 +1,11 @@
+# AppSpeedXray Web service
+
 ## Description
-- a view for checking application performance results
+- A bird view of mobile application performance.
 
 ## Usage
 - Initialize django project
   - migrate database
 
-
+## Needed packages
+- Performance score measurement library
