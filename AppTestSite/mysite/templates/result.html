@@ -7,34 +7,36 @@
     <title>Result page</title>
 </head>
 <body>
-<h1> {{ app_title }} result page </h1>
-{% for exp in exps %}
-    <h3> Experiments date: {{ exp.exp_date }}, Scene: {{ exp.scene_num }}</h3>
+<h1> Amazon shopping result page </h1>
+{#{% for exp in exps %}#}
+{#    <h3> Experiments date: {{ exp.exp_date }}, Scene: {{ exp.scene_num }}</h3>#}
+<h3> Experiments date: 2018-12-11 </h3>
     <table>
         <tr>
             <th>App Speed Score</th>
         </tr>
         <tr>
-            <td><b>17.58</b> (1*4+21*2+95*1+14*5)/12</td>
+            <td><b>48.00</b></td>
         </tr>
     </table>
     <table>
         <tr>
-            <th>Speed Index</th>
-            <th>First paint</th>
-            <th>Layout load complete</th>
-            <th>Time after downloads</th>
-            <th>CPU load</th>
+            <th>Speed index (SI)</th>
+            <th>First paint time (FP)</th>
+            <th>Layout load time (LL)</th>
+            <th>CPU stable time (CS)</th>
+            <th>Rendering after data download (RT)</th>
         </tr>
         <tr>
-            <td><b>{{ exp.speed_index }}</b></td>
-            <td><b>{{ exp.first_paint }}</b></td>
-            <td><b>{{ exp.first_interactive }}</b></td>
-            <td><b> 2.36 </b></td>
-            <td><b>{{ exp.cpu_load }}</b></td>
+            <td><b>56.52</b></td>
+            <td><b>34.73</b></td>
+            <td><b>13.08</b></td>
+            <td><b>29.44</b></td>
+            <td><b>63.61</b></td>
         </tr>
     </table>
-    <img src="{% static "img/com.amazon.mShop.android.shopping-20181104-1.png" %}" width="80%">
+    <img src="{% static "img/waterfall.png" %}" width="69%" style="display: inline; alignment: top" align="top">
+    <img src="{% static "img/radar.png" %}" width="29%" style="display: inline; alignment: top" align="top">
     <table>
         <tr>
             <th>DNS</th>
@@ -93,6 +95,6 @@
             <td>{{ exp.servers }}</td>
         </tr>
     </table>
-{% endfor %}
+{#{% endfor %}#}
 </body>
 </html>
