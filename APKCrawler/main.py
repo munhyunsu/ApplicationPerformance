@@ -11,6 +11,10 @@ def str2bool(v):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
+
+ARGS = None
+
+
 def main():
     arg_parser = argparse.ArgumentParser(description='APK크롤러 실행법')
     arg_parser.add_argument('--method', help='실행시키고자 하는 기능(crawl_new,\
@@ -40,4 +44,12 @@ def main():
 
 
 if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='How to use APK crawler')
+    parser.add_argument('-t', '--target',
+                        type=str,
+                        help='APK package name')
+    ARGS = parser.parse_args()
+
     main()
+
