@@ -10,6 +10,9 @@
 - SpeedIndex calculator
   - Init/Run-time index
 
+## Waterfall
+- draw.R in AppTimingIndex
+
 # TODO
 - Mobile APK Crawl
   - from APKPure.com
