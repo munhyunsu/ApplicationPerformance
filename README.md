@@ -25,6 +25,7 @@
   - Runtime index scean detection
 - Recognize request/response
 - Wrapper test
+- MVC
 
 # Usage
 - Add PATH of Android SDK's bin to virtual environment PATH
