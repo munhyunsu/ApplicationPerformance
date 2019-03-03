@@ -9,3 +9,6 @@
 
 ## Needed packages
 - Performance score measurement library
+
+## TODO
+- Ont shot setting script
