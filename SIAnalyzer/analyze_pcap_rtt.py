@@ -169,7 +169,7 @@ def main(argv):
     path = argv[1]
 
     subprocess.run('rm ./tmp/*', shell = True)
-    print('package', 'rtt', 'rttm', 'idletime', 'xmittime', 'tcp', 
+    print('package', 'rtt', 'rttm', 'idletime', 'xmittime', 'connections', 
           'http', 'https', 'retrans', 'trafficvolume', 'ttfb', 
           'keep', sep = ',')
     for path in get_files(path, '.pcap'):

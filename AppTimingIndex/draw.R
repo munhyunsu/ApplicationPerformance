@@ -1,4 +1,4 @@
-data = read.csv('amazon_timing.csv', header=TRUE)
+data = read.csv('/home/harny/Github/ApplicationPerformance/AppTimingIndex/output/com.amazon.mShop.android.shopping.pcap.csv', header=TRUE)
 
 png('waterfall.png', width = 1280, height = length(as.matrix(data[1]))*25+20)
 temp_par = par()

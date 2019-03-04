@@ -35,9 +35,13 @@ def clear_env(pss):
             output = command_output(command)
         except subprocess.CalledProcessError:
             continue
-        psnum = re.findall('\d+', output)[0]
-        command = 'adb shell su -c kill -9 {0}'.format(psnum)
-        command_check(command)
+        try:
+            psnum = re.findall('\d+', output)[0]
+            # command = 'adb shell su -c kill -9 {0}'.format(psnum)
+            command = 'adb shell kill -9 {0}'.format(psnum)
+            command_check(command)
+        except IndexError:
+            continue
 
 
 def terminate_env(pss):
@@ -47,9 +51,13 @@ def terminate_env(pss):
             output = command_output(command)
         except subprocess.CalledProcessError:
             continue
-        psnum = re.findall('\d+', output)[0]
-        command = 'adb shell su -c kill -2 {0}'.format(psnum)
-        command_check(command)
+        try:
+            psnum = re.findall('\d+', output)[0]
+            # command = 'adb shell su -c kill -2 {0}'.format(psnum)
+            command = 'adb shell kill -2 {0}'.format(psnum)
+            command_check(command)
+        except IndexError:
+            continue
 
 
 def command_popen(command):
@@ -110,9 +118,6 @@ def parse_xml_log(path):
     return size, point
 
 
-## adb shell -c top | grep {0}
-
-
 def main(argv=sys.argv):
     if len(argv) < 1:
         print('Can not reached line')
@@ -123,19 +128,17 @@ def main(argv=sys.argv):
     # Check dirs
     dirs = ['./output/xml',
             './output/pcap',
-            './output/mp4']
+            './output/mp4',
+            './output/top']
     check_dirs(dirs)
     # Clear env
     print('checked all binaries, dirs')
 
-    # Setup android (tcpdump)
-    setup_android('/sdcard/tcpdump')
-
     # Get list of target apps
-    if not os.path.exists('app_list.csv'):
+    if not os.path.exists('app_list_a5.csv'):
         raise Exception('Need app_list.csv')
     app_list = list()
-    with open('app_list.csv', 'r') as f:
+    with open('app_list_a5.csv', 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
             print(row['package_name'])
@@ -143,29 +146,25 @@ def main(argv=sys.argv):
     # package_name = app_list[0]
 
     for package_name in app_list:
-        pss = ['tcpdump',
-               'screenrecord']
+        pss = ['screenrecord']
         clear_env(pss)
         # clear cache without user data
-        # adb shell pm clear APKNAME
-        # adb shell run-as APKNAME rm -rf /data/data/APKNAME/cache/*
-        # adb shell su - c rm - rf /data/data/com.amazon.mShop.android.shopping/cache/*
         command = 'adb shell su -c rm -rf /data/data/{0}/cache/*'.format(package_name)
         try:
             command_check(command)
         except subprocess.CalledProcessError:
             pass
-        command = 'adb shell su -c rm /sdcard/*.xml'
+        command = 'adb shell rm /sdcard/*.xml'
         try:
             command_check(command)
         except subprocess.CalledProcessError:
             pass
-        command = 'adb shell su -c rm /sdcard/*.mp4'
+        command = 'adb shell rm /sdcard/*.mp4'
         try:
             command_check(command)
         except subprocess.CalledProcessError:
             pass
-        command = 'adb shell su -c rm /sdcard/*.pcap'
+        command = 'adb shell rm /sdcard/*.pcap'
         try:
             command_check(command)
         except subprocess.CalledProcessError:
@@ -175,14 +174,15 @@ def main(argv=sys.argv):
         # create XML dir
         os.makedirs('./output/xml/{0}'.format(package_name),
                     exist_ok=True)
+        os.makedirs('./output/top/{0}'.format(package_name),
+                    exist_ok=True)
 
         # time_list
         timing_list = list()
 
         # execute tcpdump
         timing_list.append((time.time(), 'execute tcpdump'))
-        #command = 'adb shell su -c tcpdump -i wlan0 -w /sdcard/{0}.pcap'.format(package_name)
-        command = 'ssh root@192.168.1.1 "tcpdump -i br-lan -s 0 -U -w - \(not port 22\) " > ./output/pcap/{0}'.format(package_name)
+        command = 'sshpass -p \'password\' ssh root@192.168.1.1 "tcpdump -i br-lan -s 0 -U -w - \(not port 22 and host 192.168.1.151 \) " > ./output/pcap/{0}.pcap'.format(package_name)
         tcpdump_proc = command_popen(command)
 
         # execute screenrecord
@@ -191,13 +191,11 @@ def main(argv=sys.argv):
 
         # launch app
         start_time = datetime.datetime.now()
-        ping_proc = send_ping()
         command = 'adb shell monkey -p {0} -c android.intent.category.LAUNCHER 1'.format(package_name)
         command_check(command)
-        terminate_ping(ping_proc)
 
         # insert event
-        for index in range(0, 5):
+        for index in range(0, 11):
             size_list = list()
             # wait for rendering
             while True:
@@ -207,6 +205,14 @@ def main(argv=sys.argv):
                     break
                 print('size_list', size_list)
                 # export XML log
+                dump_time = get_second_from_start(start_time)
+                if dump_time >= (index+1)*60:
+                    break
+                try:
+                    command = 'adb shell \'top -n 1 | grep {0}\' > ./output/top/{0}/{1}.txt'.format(package_name, dump_time)
+                    command_check(command)
+                except:
+                    pass
                 dump_time = get_second_from_start(start_time)
                 command = 'adb shell uiautomator dump /sdcard/{0}.xml'.format(dump_time)
                 dump_output = command_output(command)
@@ -230,35 +236,30 @@ def main(argv=sys.argv):
                 command = 'adb shell input tap {0} {1}'.format(point[0], point[1])
             else:
                 command = 'adb shell input keyevent KEYCODE_BACK'
-            ping_proc = send_ping()
             command_check(command)
-            terminate_ping(ping_proc)
 
         # stop app
-        ping_proc = send_ping()
         for index in range(0, 5):
             command = 'adb shell input keyevent KEYCODE_BACK'
             command_check(command)
         command = 'adb shell am force-stop {0}'.format(package_name)
         command_check(command)
-        terminate_ping(ping_proc)
 
         # terminate tcpdump
         tcpdump_proc.terminate()
-        # tcpdump_proc.kill()
+        tcpdump_proc.kill()
+        command = 'sshpass -p \'password\' ssh root@192.168.1.1 "killall tcpdump"'
+        command_check(command)
 
         # terminate screenrecord
         screenrecord_proc.terminate()
-        # screenrecord_proc.kill()
+        screenrecord_proc.kill()
 
         # why?
-        pss = ['tcpdump',
-               'screenrecord']
+        pss = ['screenrecord']
         terminate_env(pss)
 
-        # pull tcpdump
-        command = 'adb pull /sdcard/{0}.pcap ./output/pcap/'.format(package_name)
-        command_check(command)
+        time.sleep(5)
 
         # pull mp4
         command = 'adb pull /sdcard/{0}.mp4 ./output/mp4/'.format(package_name)
@@ -267,6 +268,3 @@ def main(argv=sys.argv):
 
 if __name__ == '__main__':
     main()
-
-# ERROR
-# adb: failed to install Gmail_v8.8.26.211559306.release_apkpure.com.apk: Failure [INSTALL_FAILED_ALREADY_EXISTS: Attempt to re-install com.google.android.gm without first uninstalling.]

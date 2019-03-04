@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +24,21 @@ public class MainActivity extends AppCompatActivity {
         /* baseline */
 //        imageView.setImageResource(R.drawable.image);
 //        imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.image));
+//        try {
+//            Socket clientSocket = null;
+//            clientSocket = new Socket("localhost", 6789);
+//            clientSocket = new Socket("localhost", 6789);
+//            clientSocket = new Socket("localhost", 6789);
+//            clientSocket = new Socket("localhost", 6789);
+//            clientSocket = new Socket("localhost", 6789);
+//            clientSocket = new Socket("localhost", 6789);
+//            clientSocket = new Socket("localhost", 6789);
+//            clientSocket = new Socket("localhost", 6789);
+//            clientSocket = new Socket("localhost", 6789);
+//            clientSocket = new Socket("localhost", 6789);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         ImageDownloader imageDownloader = new ImageDownloader(imageView);
         imageDownloader.execute("https://www.sample-videos.com/img/Sample-jpg-image-50kb.jpg");
 
