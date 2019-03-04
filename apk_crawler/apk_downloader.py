@@ -1,11 +1,17 @@
+import os
 from selenium import webdriver
 
 
 class APKDownloader(object):
-    def __init__(self, driver, data_path):
+    def __init__(self, driver, data_path, temp_path=None):
+        data_path = os.path.expanduser(data_path)
+        self.data_path = os.path.abspath(data_path)
+        if temp_path is None:
+            temp_path = os.path.join(data_path, 'tmp')
+        self.temp_path = temp_path
         options = webdriver.ChromeOptions()
         options.add_experimental_option('prefs', {
-            'download.default_directory': data_path,
+            'download.default_directory': self.temp_path,
             'download.prompt_for_download': False,
             'download.directory_upgrade': True,
             'safebrowsing.enabled': True})
@@ -32,5 +38,7 @@ class APKDownloader(object):
             apk_link = download_button.get_arrtibute('href')
         except selenium.common.exceptions.NoSuchElementException:
             return None
+
+        self.driver.get(apk_link)
 
         
