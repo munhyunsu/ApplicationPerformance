@@ -12,3 +12,5 @@
 
 ## TODO
 - Ont shot setting script
+- Index.html layout
+
