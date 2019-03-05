@@ -1,8 +1,8 @@
 import os
 import sys
 
-from src.client_ui import ClientUI
-#from src.apk_downloader import APKDownloader
+from apk_crawler.client_ui import ClientUI
+from src.apk_downloader import APKDownloader
 
 ARGS = None
 
@@ -15,8 +15,8 @@ def main():
     if ARGS.package is None:
         ARGS.package = ui.query_args('package')
 
-    print('ARGS', ARGS)
-#    downloader = APKDownloader(ARGS.driver)
+    downloader = APKDownloader(ARGS.driver)
+
 
 
 if __name__ == '__main__':

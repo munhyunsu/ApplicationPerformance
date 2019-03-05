@@ -46,19 +46,27 @@
 </head>
 <body>
 <div class="header" align="center">
-    <h1>
-{#        <img src="{% static "img/logo.png" %}" class="logo" align="middle"/>#}
-        AppSpeedXray: A mobile app performance measurement system
-{#        <img src="{% static "img/cnu_logo.png" %}" class="logo" align="middle"/>#}
-    </h1>
+    <h2><img src="{% static "img/logo.png" %}" class="logo" align="middle"/>
+    AppSpeedXray: A mobile app performance measurement system
+    <img src="{% static "img/cnu_logo.png" %}" class="logo" align="middle"/></h2>
 </div>
+
+<div>
+    <h3>Experiments(Dataset): 4350</h3>
+    <p>Performance Score: <img src="{% static "img/pscdf.png" %}" alt="pscdf" class="result" style="width: 50%;"/><br>
+        Speed Index: <img src="{% static "img/sicdf.png" %}" alt="sicdf" class="result" style="width: 50%;"/><br>
+        Performance Score by device: <img src="{% static "img/network_type_cdf.png" %}" alt="psdevice" class="result" style="width: 50%;"/><br>
+
+    </p>
+</div>
+
 <div class="row">
     <!-- Button to open the modal login form -->
     <div align="center">
         <img src="{% static "img/load_data.png" %}" onclick="document.getElementById('id01').style.display='block'"
              class="avatar"/>
-        <img src="{% static "img/new_data.png" %}" onclick="document.getElementById('id02').style.display='block'"
-             class="avatar"/>
+{#        <img src="{% static "img/new_data.png" %}" onclick="document.getElementById('id02').style.display='block'"#}
+{#             class="avatar"/>#}
     </div>
 
     <!-- The Modal -->
