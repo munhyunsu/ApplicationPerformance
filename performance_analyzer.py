@@ -5,7 +5,8 @@ from util.path import std_path
 ARGS = None
 
 def main():
-    print(ARGS)
+    xml_dir = os.path.join(ARGS.input, 'xml')
+    mp4_dir = os.path.join(ARGS.input, 'mp4')
 
 
 if __name__ == '__main__':
@@ -13,7 +14,7 @@ if __name__ == '__main__':
 
     # Parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('-iv', '--input-video', type=str, required=True,
+    parser.add_argument('-iv', '--input', type=str, required=True,
                         help='input video directory path')
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='output directory path')
@@ -21,8 +22,8 @@ if __name__ == '__main__':
     ARGS = parser.parse_args()
 
     # Preprocessing arguments
-    if 'input_video' in ARGS:
-        ARGS.input_video = std_path(ARGS.input_video)
+    if 'input' in ARGS:
+        ARGS.input = std_path(ARGS.input)
     if 'output' in ARGS:
         ARGS.output = std_path(ARGS.output)
 
