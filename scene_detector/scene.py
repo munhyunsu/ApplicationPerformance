@@ -74,3 +74,4 @@ def get_speedindex(mp4_dir, xml_dir, out_dir):
         command = shlex.split(command_line)
         subprocess.check_call(command, stdout=subprocess.PIPE)
 
+        snap_list = list(get_files(output, ext='.jpg'))
