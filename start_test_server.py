@@ -15,7 +15,7 @@ def main():
     if ARGS.package is None:
         ARGS.package = ui.query_args('package')
 
-    downloader = APKDownloader(ARGS.driver)
+#    downloader = APKDownloader(ARGS.driver)
 
 
 
