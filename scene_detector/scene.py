@@ -75,3 +75,8 @@ def get_speedindex(mp4_dir, xml_dir, out_dir):
         subprocess.check_call(command, stdout=subprocess.PIPE)
 
         snap_list = list(get_files(output, ext='.jpg'))
+
+        # get cut points
+
+        # split scene
+
