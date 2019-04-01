@@ -9,6 +9,9 @@ import sys
 import logging
 import logging.config
 
+FLAGS = None
+
+
 def color_based(image1, image2):
     """
     두개의 이미지pixel배열을 인자로 받아서 두개의 유사도가 얼마정도 되는지 반환
@@ -60,17 +63,28 @@ def check_thresholds(app_dir):
                 files.append(entry.path)
 
     files.sort()
-    base = files.pop()
-    base_pil = Image.open(base).getdata()
-    base_ski = io.imread(base)
+#    base = files.pop()
+#    base_pil = Image.open(base).getdata()
+#    base_ski = io.imread(base)
+#
+#    for comp in files:
+#        comp_pil = Image.open(comp).getdata()
+#        comp_ski = io.imread(comp)
+#        print(base, comp, 
+#              color_based(base_pil, comp_pil),
+#              ssim(base_ski, comp_ski, multichannel = True), sep = ','
+#              )
+#    base = files.pop()
+#    base_pil = Image.open(base).getdata()
+#    base_ski = io.imread(base)
 
-    for comp in files:
-        comp_pil = Image.open(comp).getdata()
-        comp_ski = io.imread(comp)
-        print(base, comp, 
-              color_based(base_pil, comp_pil),
+    for i in range(0, len(files)-1):
+        base_ski = io.imread(files[i])
+        comp_ski = io.imread(files[i+1])
+        print(files[i], files[i+1], 
               ssim(base_ski, comp_ski, multichannel = True), sep = ','
               )
+
 
 
 def main(argv = sys.argv):
@@ -80,6 +94,13 @@ def main(argv = sys.argv):
 
 
 if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-s', '--speed-index', type=count,
+                        help='Speed index')
+
+    FLAGS = parser.parse_args()
+
     main()
 
-    
