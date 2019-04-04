@@ -44,12 +44,12 @@ def main():
 
 
 if __name__ == '__main__':
-    import argparse
-    parser = argparse.ArgumentParser(description='How to use APK crawler')
-    parser.add_argument('-t', '--target',
-                        type=str,
-                        help='APK package name')
-    ARGS = parser.parse_args()
+#    import argparse
+#    parser = argparse.ArgumentParser(description='How to use APK crawler')
+#    parser.add_argument('-t', '--target',
+#                        type=str,
+#                        help='APK package name')
+#    ARGS = parser.parse_args()
 
     main()
 

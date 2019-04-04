@@ -76,7 +76,8 @@ class Crawler:
             ".card.no-rationale.square-cover.apps.small")
 
         # 300개의 div태그를 반복하면서 패키지 이름을 추출하여 리스트에 저장
-        for div_app in div_app_list:
+        #for div_app in div_app_list:
+        for div_app in div_app_list[:10]:
             app_detail = div_app.find_element_by_class_name('details')
             url = app_detail.find_element_by_class_name('title')\
                 .get_attribute('href')
@@ -163,7 +164,8 @@ class Crawler:
         카테고리 별 플레이스토어 인기차트 크롤링 및 DB 저장
         """
         # TODO: list ranomization needed
-        for category in self.category_list:
+        #for category in self.category_list:
+        for category in self.category_list[:1]:
             category_name = category[0]
             url = category[1]
 
@@ -212,7 +214,7 @@ class Crawler:
         # DB에서 아직 다운받지 않은 APK파일의 리스트를 가져옴
         not_updated_list = self.db_connector.not_updated_list()
 
-        for package_row in not_updated_list:
+        for package_row in not_updated_list[:10]:
             package_name = package_row[0]
             # apkpure.com에 패키지 이름으로 검색
             search_url = 'http://apkpure.com/search?q=' + package_name
@@ -247,20 +249,22 @@ class Crawler:
             self.chrome.get(link)
             self.chrome.implicitly_wait(10)
 
-            a_list = self.chrome.find_elements_by_class_name(' down')
+            #a_list = self.chrome.find_elements_by_class_name(' down')
             try:
-                for a in a_list:
-                    link = a.get_attribute('href')
-                    # href링크에 패키지 이름있는것이 있으면 발견!
-                    if package_name in link:
-                        self.chrome.get(link)
-                        self.chrome.implicitly_wait(10)
-                        break
-                # 페이지 내부에 iframe을 못찾는 경우가 발생
-                # 못찾는다면 해당 APK는 무시하고 다음APK로 이동
-                iframe = self.chrome.find_element_by_id('iframe_download')
+            #    for a in a_list:
+            #        link = a.get_attribute('href')
+            #        # href링크에 패키지 이름있는것이 있으면 발견!
+            #        if package_name in link:
+            #            self.chrome.get(link)
+            #            self.chrome.implicitly_wait(10)
+            #            break
+            #    # 페이지 내부에 iframe을 못찾는 경우가 발생
+            #    # 못찾는다면 해당 APK는 무시하고 다음APK로 이동
+            #    iframe = self.chrome.find_element_by_id('iframe_download')
 
-                src = iframe.get_attribute('src')
+            #    src = iframe.get_attribute('src')
+                download_button = self.chrome.find_element_by_class_name('da')
+                src = download_button.get_attribute('href')
             except:
                 print(package_name + " does not have href or iframe")
                 continue
