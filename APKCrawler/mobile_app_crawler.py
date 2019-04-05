@@ -1,6 +1,7 @@
 from Crawler import *
 import sys
 import argparse
+from argparse import RawTextHelpFormatter
 
 
 def str2bool(v):
@@ -16,11 +17,18 @@ ARGS = None
 
 
 def main():
-    arg_parser = argparse.ArgumentParser(description='APK크롤러 실행법')
-    arg_parser.add_argument('--method', help='실행시키고자 하는 기능(crawl_new,\
-        crawl_old, update_apk)')
-    arg_parser.add_argument('--desktop', type=str2bool, default=True,\
-        help='Desktop으로 실행시키려면 true, Server로 실행시키려면 false')
+    arg_parser = argparse.ArgumentParser(
+      description='Mobile App Crawler Manual',
+      formatter_class=RawTextHelpFormatter)
+    arg_parser.add_argument('-m', '--method', 
+      help=('crawl_new: Scrap PlayStore top 300 app information '
+            'for each category\n'
+            'crawl_old: Update collected app information\n'
+            'update_apk: Download APK file'))
+    arg_parser.add_argument('-d', '--desktop', 
+      type=str2bool, default=True,
+      help=('True(Default): Show web browser (use selenium)\n'
+            'False: Do not show web browser (use virtual screen)'))
 
     args = arg_parser.parse_args()
 
