@@ -2,24 +2,30 @@
 <html lang="en">
 <head>
     {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "css/result.css" %}">
     <meta charset="UTF-8">
     <title>Result page</title>
 </head>
 <body>
-<h1> Amazon shopping result page </h1>
+<div class="header" align="left">
+    <h2><img src="{% static "img/logo.png" %}" class="logo" align="middle"/>
+    AppSpeedXray: A mobile app performance measurement system
+    <img src="{% static "img/cnu_logo.png" %}" class="logo" align="middle"/></h2>
+</div>
+<h1> Performance measurement result: Netflix</h1>
 {#{% for exp in exps %}#}
 {#    <h3> Experiments date: {{ exp.exp_date }}, Scene: {{ exp.scene_num }}</h3>#}
-<h3> Experiments date: 2018-12-11 </h3>
-    <table>
+<h3> Experiments date: 2019-04-03 </h3>
+    <table align="center">
         <tr>
-            <th>App Speed Score</th>
+            <th>Performance Score</th>
         </tr>
         <tr>
-            <td><b>48.00</b></td>
+            <td><b>25.0</b></td>
         </tr>
     </table>
-    <table>
+    <table align="center">
         <tr>
             <th>Speed index (SI)</th>
             <th>First paint time (FP)</th>
@@ -28,16 +34,19 @@
             <th>Rendering after data download (RT)</th>
         </tr>
         <tr>
-            <td><b>56.52</b></td>
-            <td><b>34.73</b></td>
-            <td><b>13.08</b></td>
-            <td><b>29.44</b></td>
-            <td><b>63.61</b></td>
+            <td><b>19.6</b></td>
+            <td><b>47.1</b></td>
+            <td><b>15.8</b></td>
+            <td><b>28.6</b></td>
+            <td><b>44.1</b></td>
         </tr>
     </table>
-    <img src="{% static "img/waterfall.png" %}" width="69%" style="display: inline; alignment: top" align="top">
-    <img src="{% static "img/radar.png" %}" width="29%" style="display: inline; alignment: top" align="top">
-    <table>
+    <h4> Snapshot and Radar chart</h4>
+    <img src="{% static "img/netflix_snap.png" %}" width="69%" style="display: inline; alignment: top" align="top">
+    <img src="{% static "img/netflix_radar.png" %}" width="29%" style="display: inline; alignment: top" align="top">
+    <h4> Network traffic waterfall chart</h4>
+    <img src="{% static "img/waterfall_crop.png" %}" width="100%" style="display: inline; alignment: top" align="top">
+    <table style="margin-top: 1%;">
         <tr>
             <th>DNS</th>
             <th>Connection</th>

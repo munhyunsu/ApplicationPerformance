@@ -1,12 +1,13 @@
 body {
     font-family: sans-serif, NanumGothic;
     background-color: #ffe7ef;
+    background: white;
 }
 
 table {
     font-family: sans-serif, arial;
     border-collapse: collapse;
-    width: 100%;
+    width: 80%;
 }
 
 td, th{
@@ -24,7 +25,7 @@ tr:hover {background-color: #ddd;}
 th {
     padding-top: 12px;
     padding-bottom: 12px;
-    text-align: left;
+    text-align: center;
     background-color: #8499af;
     color: white;
 }
