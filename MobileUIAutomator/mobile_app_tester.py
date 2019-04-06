@@ -9,6 +9,8 @@ import random
 import re
 import time
 
+FLAGS = None
+
 
 def setup_android(path):
     command = 'adb shell su -c cp {0} /sbin/tcpdump'.format(path)
@@ -110,10 +112,7 @@ def parse_xml_log(path):
     return size, point
 
 
-def main(argv=sys.argv):
-    if len(argv) < 1:
-        print('Can not reached line')
-        os.exit(0)
+def main(_):
     # Check binaries
     binaries = ['adb']
     check_binary(binaries)
@@ -127,7 +126,7 @@ def main(argv=sys.argv):
     print('checked all binaries, dirs')
 
     # Setup android (tcpdump)
-    setup_android('/sdcard/tcpdump')
+    #setup_android('/sdcard/tcpdump')
 
     # Get list of target apps
     if not os.path.exists('app_list.csv'):
@@ -196,7 +195,7 @@ def main(argv=sys.argv):
         terminate_ping(ping_proc)
 
         # insert event
-        for index in range(0, 5):
+        for index in range(0, 10):
             size_list = list()
             # wait for rendering
             while True:
@@ -270,7 +269,28 @@ def main(argv=sys.argv):
 
 
 if __name__ == '__main__':
-    main()
+    import argparse
+
+    parser = argparse.ArgumentParser(
+      description='Mobile App Tester',
+      formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('-d', '--device', type=str,
+      help=('the testing device id'))
+    parser.add_argument('-r', '--root', action='store_true',
+      help=('set a flag if the testing device was rooted'))
+    parser.add_argument('-i', '--input', type=str,
+      default='./applist.csv',
+      help=('list of app package names to test(default: ./applist.csv)'))
+    parser.add_argument('-o', '--output', type=str,
+      default='./output',
+      help=('output directory(default: ./output)'))
+    parser.add_argument('-e', '--event', type=int,
+      default=10,
+      help=('the number of generated user event(default: 10)'))
+
+    FLAGS, _ = parser.parse_known_args()
+
+    main(_)
 
 # ERROR
 # adb: failed to install Gmail_v8.8.26.211559306.release_apkpure.com.apk: Failure [INSTALL_FAILED_ALREADY_EXISTS: Attempt to re-install com.google.android.gm without first uninstalling.]
