@@ -3,3 +3,4 @@ cython
 Pillow
 scipy
 scikit-image
+requests
