@@ -64,10 +64,6 @@ def command_output(command):
     return subprocess.check_output(command, shell=True).decode('utf-8')
 
 
-def write_relative_timing(start_time):
-    pass
-
-
 def send_ping():
     command = 'adb shell su -c ping -c 1 -w 1 -I wlan0 127.0.0.1'
     return command_popen(command)
@@ -267,3 +263,4 @@ def main(argv=sys.argv):
 
 if __name__ == '__main__':
     main()
+
