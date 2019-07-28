@@ -1,4 +1,4 @@
 class ExperimentManager(object):
-    def __init__(self):
-        pass
+    def __init__(self, targets):
+        self.targets = targets
 
