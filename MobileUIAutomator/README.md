@@ -1,9 +1,5 @@
 # TODO
-- Android Virtual Device!
-- Detect rendering completion
-- Monitor CPU load
-  - using top
-
+- Modulation! (Urgent)
 
 
 # Experiments Step
