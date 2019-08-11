@@ -19,4 +19,7 @@
 # Usage
 - Add PATH of Android SDK's bin to virtual environment PATH
 
+# Advertisement analysis
+- Subproject for measuring mobile ads
+
 ## Project based on Macgongmon's one
